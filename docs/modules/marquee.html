@@ -41,29 +41,29 @@
 <ul class="nowrap">
   <li><a href="../modules/button.html">button</a></li>
   <li><a href="../modules/dialog.html">dialog</a></li>
-  <li><a href="../modules/marquee.html">marquee</a></li>
+  <li><strong>marquee</strong></li>
   <li><a href="../modules/scrollbox.html">scrollbox</a></li>
-  <li><strong>text</strong></li>
+  <li><a href="../modules/text.html">text</a></li>
 </ul>
 
 </div>
 
 <div id="content">
 
-<h1>Module <code>text</code></h1>
-<p>A text display frame.</p>
-<p> With text wrapping at X, and doesn't restart at X=1.</p>
+<h1>Module <code>marquee</code></h1>
+<p>Basicly the scroll box, but without event listening, so technically it can be used as a marquee sign, etc.</p>
+<p></p>
     <h3>Info:</h3>
     <ul>
-        <li><strong>Author</strong>: znepb, CC:T</li>
+        <li><strong>Author</strong>: znepb</li>
     </ul>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#textApi.create">textApi.create (text, iX, iY, eX, eY, term)</a></td>
-	<td class="summary">Create a text box.</td>
+	<td class="name" nowrap><a href="#create">create (x, y, w, h, parent)</a></td>
+	<td class="summary">Creates a marquee frame.</td>
 	</tr>
 </table>
 
@@ -75,35 +75,37 @@
 
     <dl class="function">
     <dt>
-    <a name = "textApi.create"></a>
-    <strong>textApi.create (text, iX, iY, eX, eY, term)</strong>
+    <a name = "create"></a>
+    <strong>create (x, y, w, h, parent)</strong>
     </dt>
     <dd>
-    Create a text box.
+    Creates a marquee frame.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">text</span>
-         Text to display in the box.
+        <li><span class="parameter">x</span>
+         The X position of the marquee frame.
         </li>
-        <li><span class="parameter">iX</span>
-         The starting X position of the text frame.
+        <li><span class="parameter">y</span>
+         The Y position of the marquee frame.
         </li>
-        <li><span class="parameter">iY</span>
-         The starting Y position of the text frame.
+        <li><span class="parameter">w</span>
+         The width of the marquee frame.
         </li>
-        <li><span class="parameter">eX</span>
-         The ending X of the text frame.
+        <li><span class="parameter">h</span>
+         The height of the marquee frame.
         </li>
-        <li><span class="parameter">eY</span>
-         The ending Y of the text frame.
-        </li>
-        <li><span class="parameter">term</span>
-         The terminal the text will be written to.
+        <li><span class="parameter">parent</span>
+         The parent term of the marquee window.
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        A 500x500 terminal which can be used like a normal terminal.
+    </ol>
 
 
 

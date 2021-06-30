@@ -1,4 +1,4 @@
---- Dialog component
+--- A dialog box that can show a title, description, and an OK button.
 -- @author znepb
 -- @module dialog
 
@@ -18,6 +18,7 @@ end
 -- @param title The title of the dialog UI.
 -- @param subtext The description of the dialog.
 -- @param button The button worker that the UI's OK button will be put in.
+-- @param scroll The scrollbox instance that will be used for the textbox.
 -- @param ?width Width of the dialog. Default of 26.
 -- @param ?height Height of the dialog. Default of 10.
 -- @param ?backgroundColor Background color of the dialog. Default color is white.
@@ -26,7 +27,7 @@ end
 -- @param ?titleColor Color of the title in the dialog. Default color is black.
 -- @param ?highlightColor Color of the button's border between mouse_click and mouse_up. Default color is gray.
 -- @return A number which is the the second half the the button's ID. The way to find the ID of the button is `"ok-" .. id`. This is used to run a function when the OK button is pressed.
-function dialogApi.create(title, subtext, button, width, height, backgroundColor, borderColor, textColor, titleColor, highlightColor)
+function dialogApi.create(title, subtext, button, scroll, width, height, backgroundColor, borderColor, textColor, titleColor, highlightColor)
   -- @todo add custom buttons (for cancel, differnet ok messages, etc)
   local w, h = term.getSize()
   local preColor = term.getBackgroundColor()
@@ -44,7 +45,11 @@ function dialogApi.create(title, subtext, button, width, height, backgroundColor
   paintutils.drawFilledBox(hw - (sX / 2) + 1, hh - (sY / 2), hw + (sX / 2), hh + (sY / 2), backgroundColor)
 
   setColors(textColor, backgroundColor)
-  text.create(subtext, hw - sX / 2 + 2, hh - sY / 2 + 3, hw + sX / 2 + 1, hh + sY / 2 + 3)
+  local scrollbox = scroll.create(hw - sX / 2 + 2, hh - sY / 2 + 3, sX - 2, sY - 6, term.current())
+  scrollbox.setTextColor(textColor)
+  scrollbox.setBackgroundColor(backgroundColor)
+  scrollbox.clear()
+  text.create(subtext, 1, 1, sX - 4, 100, scrollbox)
 
   term.setCursorPos(hw - sX / 2 + 1, hh - math.floor(sY / 2) - 1)
   setColors(preColor, borderColor)

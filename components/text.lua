@@ -10,7 +10,8 @@ local textApi = {}
 -- @param iY The starting Y position of the text frame.
 -- @param eX The ending X of the text frame.
 -- @param eY The ending Y of the text frame.
-function textApi.create(text, iX, iY, eX, eY)
+-- @param term The terminal the text will be written to.
+function textApi.create(text, iX, iY, eX, eY, term)
   term.setCursorPos(iX, iY)
   local x, y = iX, iY
   local w, h = eX, eY
@@ -25,7 +26,7 @@ function textApi.create(text, iX, iY, eX, eY)
   end
 
   -- Print the line with proper word wrapping
-  sText = tostring(text)
+  local sText = tostring(text)
   while #sText > 0 do
     local whitespace = string.match(sText, "^[ \t]+")
     if whitespace then

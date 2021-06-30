@@ -1,4 +1,4 @@
---- Button component
+--- A button api that also draws a fancy border around the button, giving it a rounded effect.
 -- @author znepb
 -- @module button
 
