@@ -3,6 +3,7 @@
 -- @module dialog
 
 local dialogApi = {}
+local text = require("text")
 
 --- Internal function for setting colors.
 -- @param fg The foreground (text) color
@@ -42,6 +43,9 @@ function dialogApi.create(title, subtext, button, width, height, backgroundColor
 
   paintutils.drawFilledBox(hw - (sX / 2) + 1, hh - (sY / 2), hw + (sX / 2), hh + (sY / 2), backgroundColor)
 
+  setColors(textColor, backgroundColor)
+  text.create(subtext, hw - sX / 2 + 2, hh - sY / 2 + 3, hw + sX / 2 + 1, hh + sY / 2 + 3)
+
   term.setCursorPos(hw - sX / 2 + 1, hh - math.floor(sY / 2) - 1)
   setColors(preColor, borderColor)
   term.write(("\143"):rep(sX))
@@ -66,16 +70,12 @@ function dialogApi.create(title, subtext, button, width, height, backgroundColor
 
   local epoch = os.epoch("utc")
   paintutils.drawFilledBox(hw - sX / 2 + 1, hh + sY / 2 - 2, hw + sX / 2, hh + sY / 2, borderColor)
-  button.add("ok-" .. epoch, "OK", math.floor(hw + sX / 2 - 5), math.floor(hh + sY / 2 - 2), backgroundColor, textColor, highlightColor, colors.gray)
+  button.add("ok-" .. epoch, "OK", math.floor(hw + sX / 2 - 5), math.floor(hh + sY / 2 - 2), backgroundColor, textColor, highlightColor, borderColor)
   button.render({"ok-" .. epoch})
 
   setColors(titleColor, backgroundColor)
   term.setCursorPos(hw - sX / 2 + 2, hh - sY / 2 + 1)
   term.write(title)
-
-  setColors(textColor, backgroundColor)
-  term.setCursorPos(hw - sX / 2 + 2, hh - sY / 2 + 3)
-  term.write(subtext)
 
   return epoch
 end
