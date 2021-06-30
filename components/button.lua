@@ -1,13 +1,28 @@
+--- Button component
+-- @author znepb
+-- @module button
+
+local buttonApi = {}
+
+--- Internal function for setting colors.
+-- @param fg The foreground (text) color
+-- @param bg The background color.
+-- @local
 local function setColors(fg, bg)
   term.setBackgroundColor(bg)
   term.setTextColor(fg)
 end
 
+--- The all-mighty table of buttons.
+-- @local
 local buttons = {}
+
+--- Buttons that are enabled.
+-- @local
 local enabledButtons = {}
 
-local buttonApi = {}
-
+--- A table of colors for when the event cycle is between mouse_click and mouse_up, which the border of the button will be set to
+-- @local
 local clickColors = {
   [1] = colors.lightGray,
   [2] = colors.yellow,
@@ -27,9 +42,14 @@ local clickColors = {
   [32768] = colors.gray
 }
 
+--- Renders a single button.
+-- @param id The ID of the button to render.
+-- @param ?bgOverride The border color of the button. Default is to inherit from the button's background.
+-- @see render
 function buttonApi.renderSingle(id, bgOverride)
   local prev = term.getBackgroundColor()
   local b = buttons[id]
+  prev = b.borderColor or prev
 
   if not b then error("Button ID " .. id .. " is non-existant") end
 
@@ -52,7 +72,33 @@ function buttonApi.renderSingle(id, bgOverride)
   term.write(("\131"):rep(#b.text + 2))
 end
 
-function buttonApi.add(id, text, x, y, bgc, fgc, clickColor)
+--- Enables a button.
+-- @param id The ID of the button to enable.
+function buttonApi.enableButton(id)
+  table.insert(enabledButtons, id)
+end
+
+--- Disables a button.
+-- @param id The ID of the button to disable.
+function buttonApi.disableButton(id)
+  for i, v in pairs(enabledButtons) do
+    if v == id then
+      table.remove(enabledButtons, i)
+      break
+    end
+  end
+end
+
+--- Creates a new button.
+-- @param id The ID of the button. This will be the second parameter of a `button_click` event.
+-- @param text The text that will be displayed on the button.
+-- @param x The X position of the button. Note, this is the left corner of the button, not the text.
+-- @param y The Y position of the button. Same goes for this as for the x parameter.
+-- @param ?bgc The background color of the button. Default color is white.
+-- @param ?fgc The foreground (text) color of the button. Default color is black.
+-- @param ?clickColor The highlight color of the button's border. If not supplied, this will pull from the clickColors table.
+-- @param ?borderColor The color of the whitespace around the button. THe default is to inherit this when the button is rendered.
+function buttonApi.add(id, text, x, y, bgc, fgc, clickColor, borderColor)
   buttons[id] = {
     id = id,
     text = text,
@@ -60,21 +106,27 @@ function buttonApi.add(id, text, x, y, bgc, fgc, clickColor)
     y = y,
     background = bgc or colors.white,
     foreground = fgc or colors.black,
-    click = clickColor
+    click = clickColor,
+    borderColor = borderColor
   }
 end
 
-function buttonApi.render(many)
-  for i, v in pairs(many) do
+--- Renders a table of buttons.
+-- @param buttons A table of buttons to render.
+-- @see renderSingle
+function buttonApi.render(buttons)
+  for i, v in pairs(buttons) do
     buttonApi.renderSingle(v)
     table.insert(enabledButtons, v)
   end
 end
 
-function buttonApi.clear()
+--- Disables all buttons.
+function buttonApi.disableAll()
   enabledButtons = {}
 end
 
+--- A function to put in parallel with your event handeler. This will handle all button clicks, and is very important!
 function buttonApi.update()
   while true do
     local e, b, x, y = os.pullEvent()

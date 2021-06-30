@@ -1,0 +1,269 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><strong>button</strong></li>
+  <li><a href="../modules/dialog.html">dialog</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>button</code></h1>
+<p>Button component</p>
+<p></p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Author</strong>: znepb</li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#buttonApi.renderSingle">buttonApi.renderSingle (id, bgOverride)</a></td>
+	<td class="summary">Renders a single button.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buttonApi.enableButton">buttonApi.enableButton (id)</a></td>
+	<td class="summary">Enables a button.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buttonApi.disableButton">buttonApi.disableButton (id)</a></td>
+	<td class="summary">Disables a button.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buttonApi.add">buttonApi.add (id, text, x, y, bgc, fgc, clickColor, borderColor)</a></td>
+	<td class="summary">Creates a new button.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buttonApi.render">buttonApi.render (buttons)</a></td>
+	<td class="summary">Renders a table of buttons.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buttonApi.disableAll">buttonApi.disableAll ()</a></td>
+	<td class="summary">Disables all buttons.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buttonApi.update">buttonApi.update ()</a></td>
+	<td class="summary">A function to put in parallel with your event handeler.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "buttonApi.renderSingle"></a>
+    <strong>buttonApi.renderSingle (id, bgOverride)</strong>
+    </dt>
+    <dd>
+    Renders a single button.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         The ID of the button to render.
+        </li>
+        <li><span class="parameter">bgOverride</span>
+         The border color of the button. Default is to inherit from the button's background.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/button.html#buttonApi.render">render</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "buttonApi.enableButton"></a>
+    <strong>buttonApi.enableButton (id)</strong>
+    </dt>
+    <dd>
+    Enables a button.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         The ID of the button to enable.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buttonApi.disableButton"></a>
+    <strong>buttonApi.disableButton (id)</strong>
+    </dt>
+    <dd>
+    Disables a button.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         The ID of the button to disable.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buttonApi.add"></a>
+    <strong>buttonApi.add (id, text, x, y, bgc, fgc, clickColor, borderColor)</strong>
+    </dt>
+    <dd>
+    Creates a new button.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         The ID of the button. This will be the second parameter of a `button_click` event.
+        </li>
+        <li><span class="parameter">text</span>
+         The text that will be displayed on the button.
+        </li>
+        <li><span class="parameter">x</span>
+         The X position of the button. Note, this is the left corner of the button, not the text.
+        </li>
+        <li><span class="parameter">y</span>
+         The Y position of the button. Same goes for this as for the x parameter.
+        </li>
+        <li><span class="parameter">bgc</span>
+         The background color of the button. Default color is white.
+        </li>
+        <li><span class="parameter">fgc</span>
+         The foreground (text) color of the button. Default color is black.
+        </li>
+        <li><span class="parameter">clickColor</span>
+         The highlight color of the button's border. If not supplied, this will pull from the clickColors table.
+        </li>
+        <li><span class="parameter">borderColor</span>
+         The color of the whitespace around the button. THe default is to inherit this when the button is rendered.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buttonApi.render"></a>
+    <strong>buttonApi.render (buttons)</strong>
+    </dt>
+    <dd>
+    Renders a table of buttons.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">buttons</span>
+         A table of buttons to render.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/button.html#buttonApi.renderSingle">renderSingle</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "buttonApi.disableAll"></a>
+    <strong>buttonApi.disableAll ()</strong>
+    </dt>
+    <dd>
+    Disables all buttons.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buttonApi.update"></a>
+    <strong>buttonApi.update ()</strong>
+    </dt>
+    <dd>
+    A function to put in parallel with your event handeler.  This will handle all button clicks, and is very important!
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2021-06-29 20:35:36 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
