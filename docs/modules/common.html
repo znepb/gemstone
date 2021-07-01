@@ -40,11 +40,11 @@
 <h2>Modules</h2>
 <ul class="nowrap">
   <li><a href="../modules/button.html">button</a></li>
-  <li><a href="../modules/common.html">common</a></li>
+  <li><strong>common</strong></li>
   <li><a href="../modules/dialog.html">dialog</a></li>
   <li><a href="../modules/input.html">input</a></li>
   <li><a href="../modules/marquee.html">marquee</a></li>
-  <li><strong>scrollbox</strong></li>
+  <li><a href="../modules/scrollbox.html">scrollbox</a></li>
   <li><a href="../modules/text.html">text</a></li>
 </ul>
 
@@ -52,28 +52,20 @@
 
 <div id="content">
 
-<h1>Module <code>scrollbox</code></h1>
-<p>A scroll box.</p>
+<h1>Module <code>common</code></h1>
+<p>A common module for other components to piggyback off of.</p>
 <p></p>
-    <h3>Info:</h3>
-    <ul>
-        <li><strong>Author</strong>: znepb</li>
-    </ul>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#create">create (id, x, y, w, h, parent)</a></td>
-	<td class="summary">Create a new scroll box.</td>
+	<td class="name" nowrap><a href="#drawBorder">drawBorder (background, foreground, x, y, w, h, dialog, noRounded)</a></td>
+	<td class="summary">Draws a fancy rounded (or not) border.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#remove">remove (id)</a></td>
-	<td class="summary">Removes a scrollbox's event listener.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#update">update ()</a></td>
-	<td class="summary">The event listener for the scrollbox.</td>
+	<td class="name" nowrap><a href="#textOverflow">textOverflow (text, max)</a></td>
+	<td class="summary">A function that will chop off text if it's longer than a specified number.</td>
 	</tr>
 </table>
 
@@ -85,73 +77,63 @@
 
     <dl class="function">
     <dt>
-    <a name = "create"></a>
-    <strong>create (id, x, y, w, h, parent)</strong>
+    <a name = "drawBorder"></a>
+    <strong>drawBorder (background, foreground, x, y, w, h, dialog, noRounded)</strong>
     </dt>
     <dd>
-    Create a new scroll box.
+    Draws a fancy rounded (or not) border.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">id</span>
-         The ID of the scrollbox.
+        <li><span class="parameter">background</span>
+         The background color of the border.
+        </li>
+        <li><span class="parameter">foreground</span>
+         The foreground color of the border.
         </li>
         <li><span class="parameter">x</span>
-         The X position of the scrollbox.
+         The X position of the border.
         </li>
         <li><span class="parameter">y</span>
-         The Y position of the scrollbox.
+         The Y position of the border.
         </li>
         <li><span class="parameter">w</span>
-         The width of the scrollbox.
+         The width of the border. This should be at least 3.
         </li>
         <li><span class="parameter">h</span>
-         The height of the scrollbox.
+         The height of the border. This should be at least 3.
         </li>
-        <li><span class="parameter">parent</span>
-         The parent terminal of the scrollbox.
+        <li><span class="parameter">dialog</span>
+         If true, this moves the border's bottom up one subpixel. This is used by the dialog element.
+        </li>
+        <li><span class="parameter">noRounded</span>
+         If true, the rounded corners of the UIs will be disabled, and will be square instead.
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A terminal-like instance, with a couple more functions.
-    </ol>
 
 
 
 
 </dd>
     <dt>
-    <a name = "remove"></a>
-    <strong>remove (id)</strong>
+    <a name = "textOverflow"></a>
+    <strong>textOverflow (text, max)</strong>
     </dt>
     <dd>
-    Removes a scrollbox's event listener.  Notice this does not clear it, you will have to clear the screen to remove it.
+    A function that will chop off text if it's longer than a specified number.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">id</span>
-         The ID of the scroll box.
+        <li><span class="parameter">text</span>
+         The text to check for overflow.
+        </li>
+        <li><span class="parameter">max</span>
+         The maximum size of the text.
         </li>
     </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "update"></a>
-    <strong>update ()</strong>
-    </dt>
-    <dd>
-    The event listener for the scrollbox.  Put this in parallel with your event loop.
-
-
 
 
 

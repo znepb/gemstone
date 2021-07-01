@@ -4,15 +4,7 @@
 
 local dialogApi = {}
 local text = require("text")
-
---- Internal function for setting colors.
--- @param fg The foreground (text) color
--- @param bg The background color.
--- @local
-local function setColors(fg, bg)
-  term.setBackgroundColor(bg)
-  term.setTextColor(fg)
-end
+local common = require("common")
 
 --- Create a dialog element, and render it.
 -- @param title The title of the dialog UI.
@@ -46,40 +38,20 @@ function dialogApi.create(title, subtext, button, scroll, width, height, backgro
 
   paintutils.drawFilledBox(hw - (sX / 2) + 1, hh - (sY / 2), hw + (sX / 2), hh + (sY / 2), backgroundColor)
 
-  setColors(textColor, backgroundColor)
+  common.setColors(textColor, backgroundColor)
   local scrollbox = scroll.create("scroll-" .. epoch, hw - sX / 2 + 2, hh - sY / 2 + 3, sX - 2, sY - 6, term.current())
   scrollbox.setTextColor(textColor)
   scrollbox.setBackgroundColor(backgroundColor)
   scrollbox.clear()
   text.create(subtext, 1, 1, sX - 4, 100, scrollbox)
 
-  term.setCursorPos(hw - sX / 2 + 1, hh - math.floor(sY / 2) - 1)
-  setColors(preColor, borderColor)
-  term.write(("\143"):rep(sX))
-
-  for i = hh - sY / 2, hh + sY / 2 do
-    term.setCursorPos(hw - sX / 2, i)
-    term.write("\149")
-  end
-
-  setColors(backgroundColor, borderColor)
-  term.setCursorPos(hw - sX / 2 + 1, hh + sY / 2 - 3)
-  term.write(("\143"):rep(sX))
-
-  setColors(borderColor, preColor)
-  for i = hh - sY / 2, hh + sY / 2 do
-    term.setCursorPos(hw + sX / 2 + 1, i)
-    term.write("\149")
-  end
-
-  term.setCursorPos(hw - sX / 2 + 1, hh + math.floor(sY / 2) + 1)
-  term.write(("\131"):rep(sX))
+  common.drawBorder(backgroundColor, borderColor, hw - (sX / 2), hh - (sY / 2) - 1, sX + 2, sY + 3, true)
 
   paintutils.drawFilledBox(hw - sX / 2 + 1, hh + sY / 2 - 2, hw + sX / 2, hh + sY / 2, borderColor)
   button.add("ok-" .. epoch, "OK", math.floor(hw + sX / 2 - 5), math.floor(hh + sY / 2 - 2), backgroundColor, textColor, highlightColor, borderColor)
   button.render({"ok-" .. epoch})
 
-  setColors(titleColor, backgroundColor)
+  common.setColors(titleColor, backgroundColor)
   term.setCursorPos(hw - sX / 2 + 2, hh - sY / 2 + 1)
   term.write(title)
 
