@@ -78,6 +78,9 @@ function marquee.create(x, y, w, h, parent)
     native = scrollWin.native,
     getScroll = function()
       return internal.scrollX, -internal.scrollY
+    end,
+    setVisible = function(value)
+      parentWin.setVisible(value)
     end
   }
   return sbterm

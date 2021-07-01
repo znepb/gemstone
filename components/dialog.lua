@@ -29,6 +29,8 @@ end
 -- @return A number which is the the second half the the button's ID. The way to find the ID of the button is `"ok-" .. id`. This is used to run a function when the OK button is pressed.
 function dialogApi.create(title, subtext, button, scroll, width, height, backgroundColor, borderColor, textColor, titleColor, highlightColor)
   -- @todo add custom buttons (for cancel, differnet ok messages, etc)
+  local epoch = os.epoch("utc")
+
   local w, h = term.getSize()
   local preColor = term.getBackgroundColor()
 
@@ -45,7 +47,7 @@ function dialogApi.create(title, subtext, button, scroll, width, height, backgro
   paintutils.drawFilledBox(hw - (sX / 2) + 1, hh - (sY / 2), hw + (sX / 2), hh + (sY / 2), backgroundColor)
 
   setColors(textColor, backgroundColor)
-  local scrollbox = scroll.create(hw - sX / 2 + 2, hh - sY / 2 + 3, sX - 2, sY - 6, term.current())
+  local scrollbox = scroll.create("scroll-" .. epoch, hw - sX / 2 + 2, hh - sY / 2 + 3, sX - 2, sY - 6, term.current())
   scrollbox.setTextColor(textColor)
   scrollbox.setBackgroundColor(backgroundColor)
   scrollbox.clear()
@@ -73,7 +75,6 @@ function dialogApi.create(title, subtext, button, scroll, width, height, backgro
   term.setCursorPos(hw - sX / 2 + 1, hh + math.floor(sY / 2) + 1)
   term.write(("\131"):rep(sX))
 
-  local epoch = os.epoch("utc")
   paintutils.drawFilledBox(hw - sX / 2 + 1, hh + sY / 2 - 2, hw + sX / 2, hh + sY / 2, borderColor)
   button.add("ok-" .. epoch, "OK", math.floor(hw + sX / 2 - 5), math.floor(hh + sY / 2 - 2), backgroundColor, textColor, highlightColor, borderColor)
   button.render({"ok-" .. epoch})
@@ -83,6 +84,15 @@ function dialogApi.create(title, subtext, button, scroll, width, height, backgro
   term.write(title)
 
   return epoch
+end
+
+--- Dismisses a dialog box.
+-- @param id The ID of the dialog, retured at creation.
+-- @param button The button manager used at creation.
+-- @param scroll The scroll manager used at creation.
+function dialogApi.dismiss(id, button, scroll)
+  button.disableButton("ok-" .. id)
+  scroll.remove("scroll-" .. id)
 end
 
 return dialogApi
