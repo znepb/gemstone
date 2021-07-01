@@ -45,8 +45,8 @@
   <li><a href="../modules/event.html">event</a></li>
   <li><a href="../modules/input.html">input</a></li>
   <li><a href="../modules/marquee.html">marquee</a></li>
-  <li><a href="../modules/rawButton.html">rawButton</a></li>
-  <li><strong>scrollbox</strong></li>
+  <li><strong>rawButton</strong></li>
+  <li><a href="../modules/scrollbox.html">scrollbox</a></li>
   <li><a href="../modules/text.html">text</a></li>
 </ul>
 
@@ -54,8 +54,8 @@
 
 <div id="content">
 
-<h1>Module <code>scrollbox</code></h1>
-<p>A scroll box.</p>
+<h1>Module <code>rawButton</code></h1>
+<p>The button module, but without a border and text.</p>
 <p></p>
     <h3>Info:</h3>
     <ul>
@@ -66,16 +66,28 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#create">create (id, x, y, w, h, parent)</a></td>
-	<td class="summary">Create a new scroll box.</td>
+	<td class="name" nowrap><a href="#disableButton">disableButton (id)</a></td>
+	<td class="summary">Disables a button.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#remove">remove (id)</a></td>
-	<td class="summary">Removes a scrollbox's event listener.</td>
+	<td class="name" nowrap><a href="#add">add (id, x, y, width, height)</a></td>
+	<td class="summary">Creates a new button</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#enableButton">enableButton (id)</a></td>
+	<td class="summary">Enables a button.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#enableButtons">enableButtons (ids)</a></td>
+	<td class="summary">Enables multiple buttons.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#disableAll">disableAll ()</a></td>
+	<td class="summary">Disables all buttons in the manager.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#init">init (manager)</a></td>
-	<td class="summary">Initalizes the event manager for the scrollbox.</td>
+	<td class="summary">Initalizes the event manager.</td>
 	</tr>
 </table>
 
@@ -87,59 +99,105 @@
 
     <dl class="function">
     <dt>
-    <a name = "create"></a>
-    <strong>create (id, x, y, w, h, parent)</strong>
+    <a name = "disableButton"></a>
+    <strong>disableButton (id)</strong>
     </dt>
     <dd>
-    Create a new scroll box.
+    Disables a button.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
-         The ID of the scrollbox.
-        </li>
-        <li><span class="parameter">x</span>
-         The X position of the scrollbox.
-        </li>
-        <li><span class="parameter">y</span>
-         The Y position of the scrollbox.
-        </li>
-        <li><span class="parameter">w</span>
-         The width of the scrollbox.
-        </li>
-        <li><span class="parameter">h</span>
-         The height of the scrollbox.
-        </li>
-        <li><span class="parameter">parent</span>
-         The parent terminal of the scrollbox.
+         The ID of the button to disable.
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A terminal-like instance, with a couple more functions.
-    </ol>
 
 
 
 
 </dd>
     <dt>
-    <a name = "remove"></a>
-    <strong>remove (id)</strong>
+    <a name = "add"></a>
+    <strong>add (id, x, y, width, height)</strong>
     </dt>
     <dd>
-    Removes a scrollbox's event listener.  Notice this does not clear it, you will have to clear the screen to remove it.
+    Creates a new button
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
-         The ID of the scroll box.
+         The ID of the button to create.
+        </li>
+        <li><span class="parameter">x</span>
+         The X position of the button.
+        </li>
+        <li><span class="parameter">y</span>
+         The Y position of the button.
+        </li>
+        <li><span class="parameter">width</span>
+         The width of the button.
+        </li>
+        <li><span class="parameter">height</span>
+         The height of the button.
         </li>
     </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "enableButton"></a>
+    <strong>enableButton (id)</strong>
+    </dt>
+    <dd>
+    Enables a button.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         The ID of the button to enable.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "enableButtons"></a>
+    <strong>enableButtons (ids)</strong>
+    </dt>
+    <dd>
+    Enables multiple buttons.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">ids</span>
+         A table of IDs to enable.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "disableAll"></a>
+    <strong>disableAll ()</strong>
+    </dt>
+    <dd>
+    Disables all buttons in the manager.
+
+
 
 
 
@@ -151,7 +209,7 @@
     <strong>init (manager)</strong>
     </dt>
     <dd>
-    Initalizes the event manager for the scrollbox.
+    Initalizes the event manager.
 
 
     <h3>Parameters:</h3>

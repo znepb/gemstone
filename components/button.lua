@@ -108,11 +108,10 @@ function buttonApi.disableAll()
   enabledButtons = {}
 end
 
---- A function to put in parallel with your event handeler. This will handle all button clicks, and is very important!
-function buttonApi.update()
-  while true do
-    local e, b, x, y = os.pullEvent()
-
+--- Initalizes the event manager.
+-- @param manager The event manager.
+function buttonApi.init(manager)
+  manager.inject(function(e, b, x, y)
     if e == "mouse_up" then
       if b == 1 then
         for i, v in pairs(enabledButtons) do
@@ -136,7 +135,7 @@ function buttonApi.update()
         end
       end
     end
-  end
+  end)
 end
 
 return buttonApi

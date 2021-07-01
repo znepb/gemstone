@@ -32,11 +32,10 @@ function scrollbox.remove(id)
   scrollboxes[id] = nil
 end
 
---- The event listener for the scrollbox. Put this in parallel with your event loop.
-function scrollbox.update()
-  while true do
-    local e = {os.pullEvent()}
-
+--- Initalizes the event manager for the scrollbox.
+-- @param manager The event manager.
+function scrollbox.init(manager)
+  manager.inject(function(e)
     if e[1] == "mouse_scroll" then
       local d, x, y = e[2], e[3], e[4]
       for i, v in pairs(scrollboxes) do
@@ -55,7 +54,7 @@ function scrollbox.update()
         end
       end
     end
-  end
+  end)
 end
 
 return scrollbox

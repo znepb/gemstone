@@ -335,10 +335,9 @@ function input.remove(id)
 end
 
 --- The event listener for the text box. When the text box has been finished, an event will be queued, entitled "textbox_complete". The first parameter is the ID of the textbox, and the second is the text entered into said textbox.
-function input.update()
-  while true do
-    local e = {os.pullEvent()}
-    
+-- @param manager The event manager.
+function input.init(manager)
+  manager.inject(function(e)
     if e[1] == "mouse_click" then
       local m, x, y = e[2], e[3], e[4]
 
@@ -357,7 +356,7 @@ function input.update()
         end
       end
     end
-  end
+  end)
 end
 
 return input
