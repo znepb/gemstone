@@ -274,41 +274,13 @@ function input.read(_sReplaceChar, _tHistory, _fnComplete, _sDefault, _nLimit)
   return sLine
 end
 
---- Internal function to draw a border for the text box. This doesn't use the common one because this input box is THICC
--- @param x The X position of the border
--- @param y The Y position of the border
--- @param w The width of the border.
--- @param fg The foreground color of the border
--- @param bg The background color of the border
-local function drawTextboxBorder(x, y, w, fg, bg)
-  term.setCursorPos(x, y)
-  common.setColors(bg, fg)
-  term.write("\152")
-  term.write(("\140"):rep(w - 2))
-  common.setColors(fg, bg)
-  term.write("\155")
-
-  common.setColors(bg, fg)
-  term.setCursorPos(x, y + 1)
-  term.write("\149")
-  common.setColors(fg, bg)
-  term.setCursorPos(x + w - 1, y + 1)
-  term.write("\149")
-
-  term.setCursorPos(x, y + 2)
-  common.setColors(bg, fg)
-  term.write("\137")
-  term.write(("\140"):rep(w - 2))
-  term.write("\134")
-end
-
 --- Renders a textbox.
 -- @param id The ID of the textbox to render.
 function input.render(id)
   local o = inputs[id]
 
   paintutils.drawFilledBox(o.x + 1, o.y + 1, o.x + o.w - 2, o.y + 1, o.backgroundColor or colors.white)
-  drawTextboxBorder(o.x, o.y, o.w, o.backgroundColor or colors.white, o.borderColor or colors.gray)
+  common.drawBorder(o.backgroundColor or colors.white, o.borderColor or colors.gray, o.x, o.y, o.w, 3, nil, true)
 
   if o.defaultText then
     term.setCursorPos(o.x + 1, o.y + 1)
@@ -372,7 +344,7 @@ function input.update()
 
       for i, v in pairs(inputs) do
         if x >= v.x and y >= v.y and y <= v.y + 2 and x <= v.x + v.w - 1 then
-          drawTextboxBorder(v.x, v.y, v.w, v.backgroundColor or colors.white, v.borderSelectedColor or colors.lightBlue)
+          common.drawBorder(v.backgroundColor or colors.white, v.borderSelectedColor or colors.lightBlue, v.x, v.y, v.w, 3, nil, true)
           term.setTextColor(v.textColor or colors.gray)
           paintutils.drawFilledBox(v.x + 1, v.y + 1, v.x + v.w- 2, v.y + 1, v.backgroundColor or colors.white)
 

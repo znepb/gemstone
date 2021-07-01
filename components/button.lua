@@ -3,15 +3,7 @@
 -- @module button
 
 local buttonApi = {}
-
---- Internal function for setting colors.
--- @param fg The foreground (text) color
--- @param bg The background color.
--- @local
-local function setColors(fg, bg)
-  term.setBackgroundColor(bg)
-  term.setTextColor(fg)
-end
+local common = require("common")
 
 --- The all-mighty table of buttons.
 -- @local
@@ -44,32 +36,22 @@ local clickColors = {
 
 --- Renders a single button.
 -- @param id The ID of the button to render.
--- @param ?bgOverride The border color of the button. Default is to inherit from the button's background.
+-- @param ?borderOverride The border color of the button. Default is to inherit from the button's background.
 -- @see render
-function buttonApi.renderSingle(id, bgOverride)
+function buttonApi.renderSingle(id, borderOverride)
   local prev = term.getBackgroundColor()
   local b = buttons[id]
   prev = b.borderColor or prev
 
   if not b then error("Button ID " .. id .. " is non-existant") end
 
-  setColors(b.foreground, b.background)
+  common.setColors(b.foreground, b.background)
   term.setCursorPos(b.x + 1, b.y + 1)
   term.write((" %s "):format(b.text))
 
-  setColors(prev, bgOverride or b.background)
-  term.setCursorPos(b.x + 1, b.y)
-  term.write(("\143"):rep(#b.text + 2))
+  local border = borderOverride or b.background
 
-  term.setCursorPos(b.x, b.y + 1)
-  term.write("\149")
-
-  term.setCursorPos(b.x + 3 + #b.text, b.y + 1)
-  setColors(bgOverride or b.background, prev)
-  term.write("\149")
-
-  term.setCursorPos(b.x + 1, b.y + 2)
-  term.write(("\131"):rep(#b.text + 2))
+  common.drawBorder(prev, border, b.x, b.y, #b.text + 4, 3)
 end
 
 --- Enables a button.
