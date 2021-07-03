@@ -3,7 +3,7 @@
 -- @module scrollbox
 
 local scrollbox = {}
-local marquee = require("marquee")
+local marquee = require(".drawing.components.marquee")
 local scrollboxes = {}
 
 --- Create a new scroll box.

@@ -2,7 +2,7 @@
 -- @module input
 
 local input = {}
-local common = require("common")
+local common = require(".drawing.lib.common")
 
 local inputs = {}
 
@@ -278,16 +278,17 @@ end
 -- @param id The ID of the textbox to render.
 function input.render(id)
   local o = inputs[id]
+  local bg = term.getBackgroundColor()
 
-  paintutils.drawFilledBox(o.x + 1, o.y + 1, o.x + o.w - 2, o.y + 1, o.backgroundColor or colors.white)
-  common.drawBorder(o.backgroundColor or colors.white, o.borderColor or colors.gray, o.x, o.y, o.w, 3, nil, true)
+  paintutils.drawFilledBox(o.x + 1, o.y + 1, o.x + o.w - 2, o.y + 1, o.backgroundColor)
+  common.drawBorder(colors.white, o.borderColor, o.x, o.y, o.w, 3, nil, true)
 
-  if o.defaultText then
+  if o.defaultText and o.defaultText ~= "" then
     term.setCursorPos(o.x + 1, o.y + 1)
-    term.setTextColor(o.textColor or colors.gray)
+    term.setTextColor(o.textColor)
     term.write(common.textOverflow(o.defaultText, o.w - 2))
   elseif o.placeholder then
-    term.setTextColor(o.placeholderColor or colors.lightGray)
+    term.setTextColor(o.placeholderColor)
     term.setCursorPos(o.x + 1, o.y + 1)
     term.write(o.placeholder)
   end
@@ -298,16 +299,12 @@ end
 -- @param x The X position of the textbox.
 -- @param y The Y position of the textbox.
 -- @param w The width of the textbox.
+-- @param theme The theme to use/
 -- @param placeholder The text that will be shown when no text has been entered. Note that this is overidden by default. The difference is that placeholder text does not persist when the textbox is selected.
 -- @param history The history table that the read function will draw from.
 -- @param replace The replace character, mainly for passwords.
 -- @param default The default text that will be entered. For mor information on this, see the placeholder paramerer.
--- @param ?textColor The text of default text, or the text when it is being entered into the box. Default color is gray.
--- @param ?bgColor The color of the background of the input box. Default color is white.
--- @param ?placeholderColor The color of the placeholder text.
--- @param ?borderColor The color of the border of the textbox when it isn't selected
--- @param ?borderSelColor The color of the border when the textbox is selected.
-function input.create(id, x, y, w, placeholder, history, replace, default, textColor, bgColor, placeholderColor, borderColor, borderSelColor)
+function input.create(id, x, y, w, theme, placeholder, history, replace, default)
   term.setTextColor(colors.gray)
 
   inputs[id] = {
@@ -318,14 +315,26 @@ function input.create(id, x, y, w, placeholder, history, replace, default, textC
     history = history,
     replaceCharacter = replace,
     defaultText = default,
-    borderColor = borderColor,
-    borderSelectedColor = borderSelColor,
-    backgroundColor = bgColor,
-    textColor = textColor,
-    placeholderColor = placeholderColor
+    borderColor = theme.input.borderColor,
+    borderSelectedColor = theme.input.borderColorActive,
+    backgroundColor = theme.input.backgroundColorbgColor,
+    textColor = theme.input.textColor,
+    placeholderColor = theme.input.placeholderColor
   }
 
   input.render(id)
+end
+
+--- Gets the current text inside an input.
+-- @param id The ID of the input to retrieve text from.
+function input.getText(id)
+  return inputs[id].defaultText
+end
+
+--- Clears an input
+-- @param id The ID of the input to clear out.
+function input.clear(id)
+  inputs[id].defaultText = ""
 end
 
 --- Removes an input.

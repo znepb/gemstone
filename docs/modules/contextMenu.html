@@ -41,12 +41,12 @@
 <ul class="nowrap">
   <li><a href="../modules/button.html">button</a></li>
   <li><a href="../modules/common.html">common</a></li>
-  <li><a href="../modules/contextMenu.html">contextMenu</a></li>
+  <li><strong>contextMenu</strong></li>
   <li><a href="../modules/dialog.html">dialog</a></li>
   <li><a href="../modules/event.html">event</a></li>
   <li><a href="../modules/input.html">input</a></li>
   <li><a href="../modules/marquee.html">marquee</a></li>
-  <li><strong>rawButton</strong></li>
+  <li><a href="../modules/rawButton.html">rawButton</a></li>
   <li><a href="../modules/scrollbox.html">scrollbox</a></li>
   <li><a href="../modules/text.html">text</a></li>
 </ul>
@@ -55,11 +55,9 @@
 
 <div id="content">
 
-<h1>Module <code>rawButton</code></h1>
-<p>The button module, but without a border and text.</p>
-<p>
-
-</p>
+<h1>Module <code>contextMenu</code></h1>
+<p>Context menus, with seperators, and buttons.</p>
+<p> Fancy!</p>
     <h3>Info:</h3>
     <ul>
         <li><strong>Author</strong>: znepb</li>
@@ -69,28 +67,24 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#disableButton">disableButton (id)</a></td>
-	<td class="summary">Disables a button.</td>
+	<td class="name" nowrap><a href="#render">render (id)</a></td>
+	<td class="summary">Renders a context menu.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#add">add (id, x, y, width, height)</a></td>
-	<td class="summary">Creates a new button</td>
+	<td class="name" nowrap><a href="#dismiss">dismiss (id)</a></td>
+	<td class="summary">Dismisses a context menu.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#enableButton">enableButton (id)</a></td>
-	<td class="summary">Enables a button.</td>
+	<td class="name" nowrap><a href="#exists">exists (id)</a></td>
+	<td class="summary">Checks if a context menu exists.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#enableButtons">enableButtons (ids)</a></td>
-	<td class="summary">Enables multiple buttons.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#disableAll">disableAll ()</a></td>
-	<td class="summary">Disables all buttons in the manager.</td>
+	<td class="name" nowrap><a href="#create">create (id, x, y, elements, theme, presist)</a></td>
+	<td class="summary">Creates a new context menu.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#init">init (manager)</a></td>
-	<td class="summary">Initalizes the event manager.</td>
+	<td class="summary">Initalizes the context menu's event manager.</td>
 	</tr>
 </table>
 
@@ -102,17 +96,17 @@
 
     <dl class="function">
     <dt>
-    <a name = "disableButton"></a>
-    <strong>disableButton (id)</strong>
+    <a name = "render"></a>
+    <strong>render (id)</strong>
     </dt>
     <dd>
-    Disables a button.
+    Renders a context menu.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
-         The ID of the button to disable.
+         The ID of the context menu to render.
         </li>
     </ul>
 
@@ -122,85 +116,79 @@
 
 </dd>
     <dt>
-    <a name = "add"></a>
-    <strong>add (id, x, y, width, height)</strong>
+    <a name = "dismiss"></a>
+    <strong>dismiss (id)</strong>
     </dt>
     <dd>
-    Creates a new button
+    Dismisses a context menu.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
-         The ID of the button to create.
+         The context menu to dismiss.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "exists"></a>
+    <strong>exists (id)</strong>
+    </dt>
+    <dd>
+    Checks if a context menu exists.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         The ID of the context menu to check the existance of.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Whether or not the context menu exists.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "create"></a>
+    <strong>create (id, x, y, elements, theme, presist)</strong>
+    </dt>
+    <dd>
+    Creates a new context menu.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         The ID of the context menu. When a context menu item is selected, a event with the name <code>context_menu_select</code> will be dispatched, with a first argument being the context menu id, and the second being thr button id.
         </li>
         <li><span class="parameter">x</span>
-         The X position of the button.
+         The X position of the context menu.
         </li>
         <li><span class="parameter">y</span>
-         The Y position of the button.
+         The Y position of the context menu.
         </li>
-        <li><span class="parameter">width</span>
-         The width of the button.
+        <li><span class="parameter">elements</span>
+         The elements that will be put inside the context menu. See tests/contextMenu.lua for an example.
         </li>
-        <li><span class="parameter">height</span>
-         The height of the button.
+        <li><span class="parameter">theme</span>
+         The theme to use for the context menu.
         </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "enableButton"></a>
-    <strong>enableButton (id)</strong>
-    </dt>
-    <dd>
-    Enables a button.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">id</span>
-         The ID of the button to enable.
+        <li><span class="parameter">presist</span>
+         If true, the context menu will stick around after being clicked or clicked outside of.
         </li>
     </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "enableButtons"></a>
-    <strong>enableButtons (ids)</strong>
-    </dt>
-    <dd>
-    Enables multiple buttons.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">ids</span>
-         A table of IDs to enable.
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "disableAll"></a>
-    <strong>disableAll ()</strong>
-    </dt>
-    <dd>
-    Disables all buttons in the manager.
-
-
 
 
 
@@ -212,13 +200,13 @@
     <strong>init (manager)</strong>
     </dt>
     <dd>
-    Initalizes the event manager.
+    Initalizes the context menu's event manager.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">manager</span>
-         The event manager.
+         The event manager instance to use.
         </li>
     </ul>
 
