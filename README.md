@@ -14,7 +14,7 @@ Docs are currently still semi-work-in-progress. Events aren't documented yet, an
 
 ## Contribution
 Contributions are very welcome, and if you do make a PR to add a new element to the official repo, it must:
-- Have adequete documentation
+- Have adequate documentation
 - Must be fairly-well optimized
 - Maintain the design language between other elements in the API
 - It must not be buggy!  
