@@ -1,13 +1,12 @@
 --- Context menus, with seperators, and buttons. Fancy!
--- @module contextMenu
--- @author znepb
+-- @module[kind=component] components
 
 local contextMenu = {}
 local menus = {}
 local common = require(".drawing.lib.common")
 
 --- Renders a context menu.
--- @param id The ID of the context menu to render.
+-- @tparam number id The ID of the context menu to render.
 function contextMenu.render(id)
   local maxWidth = 0
   local m = menus[id]
@@ -41,26 +40,26 @@ function contextMenu.render(id)
 end
 
 --- Dismisses a context menu.
--- @param id The context menu to dismiss.
+-- @tparam number id The context menu to dismiss.
 function contextMenu.dismiss(id)
   menus[id] = nil
   os.queueEvent("context_menu_dismiss", id)
 end
 
 --- Checks if a context menu exists.
--- @param id The ID of the context menu to check the existance of.
+-- @tparam number id The ID of the context menu to check the existance of.
 -- @return Whether or not the context menu exists.
 function contextMenu.exists(id)
   return menus[id] ~= nil
 end
 
 --- Creates a new context menu.
--- @param id The ID of the context menu. When a context menu item is selected, a event with the name `context_menu_select` will be dispatched, with a first argument being the context menu id, and the second being thr button id.
--- @param x The X position of the context menu.
--- @param y The Y position of the context menu.
--- @param elements The elements that will be put inside the context menu. See tests/contextMenu.lua for an example.
--- @param theme The theme to use for the context menu.
--- @param ?presist If true, the context menu will stick around after being clicked or clicked outside of.
+-- @tparam number id The ID of the context menu. When a context menu item is selected, a event with the name `context_menu_select` will be dispatched, with a first argument being the context menu id, and the second being thr button id.
+-- @tparam number x The X position of the context menu.
+-- @tparam number y The Y position of the context menu.
+-- @tparam table elements The elements that will be put inside the context menu. See tests/contextMenu.lua for an example.
+-- @tparam table theme The theme to use for the context menu.
+-- @tparam[opt] table presist If true, the context menu will stick around after being clicked or clicked outside of.
 function contextMenu.create(id, x, y, elements, theme, presist)
   menus[id] = {
     x = x,
@@ -76,7 +75,7 @@ function contextMenu.create(id, x, y, elements, theme, presist)
 end
 
 --- Initalizes the context menu's event manager.
--- @param manager The event manager instance to use.
+-- @tparam table manager The event manager instance to use.
 function contextMenu.init(manager)
   manager.inject(function(e)
     if e[1] == "mouse_click" then

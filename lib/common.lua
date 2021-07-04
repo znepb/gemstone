@@ -1,28 +1,27 @@
 --- A common module for other components to piggyback off of.
--- @module common
+-- @module[kind=library] common
 
 local common = {}
 
 --- Internal function for setting colors.
--- @param fg The foreground (text) color
--- @param bg The background color.
--- @local
+-- @tparam number fg The foreground (text) color
+-- @tparam number bg The background color.
 function common.setColors(fg, bg)
   term.setBackgroundColor(bg)
   term.setTextColor(fg)
 end
 
 --- Draws a fancy rounded (or not) border.
--- @param background The background color of the border.
--- @param foreground The foreground color of the border.
--- @param x The X position of the border.
--- @param y The Y position of the border.
--- @param w The width of the border. This should be at least 3.
--- @param h The height of the border. This should be at least 3.
--- @param ?dialog If true, this moves the border's bottom up one subpixel. This is used by the dialog element.
--- @param ?large Makes the border a little larger. This is used for inputs.
--- @param ?filled Fills in the edges if the large parameter is true. Note that this does not fill in the area of the border.
--- @param ?squareEdges If true, the rounded corners of the UIs will be disabled, and will be square instead.
+-- @tparam number background The background color of the border.
+-- @tparam number foreground The foreground color of the border.
+-- @tparam number x The X position of the border.
+-- @tparam number y The Y position of the border.
+-- @tparam number w The width of the border. This should be at least 3.
+-- @tparam number h The height of the border. This should be at least 3.
+-- @tparam[opt] boolean ?dialog If true, this moves the border's bottom up one subpixel. This is used by the dialog element.
+-- @tparam[opt] boolean ?large Makes the border a little larger. This is used for inputs.
+-- @tparam[opt] boolean ?filled Fills in the edges if the large parameter is true. Note that this does not fill in the area of the border.
+-- @tparam[opt] boolean ?squareEdges If true, the rounded corners of the UIs will be disabled, and will be square instead.
 function common.drawBorder(background, foreground, x, y, w, h, dialog, large, filled, squareEdges)
   if large then
     if filled then
@@ -125,8 +124,8 @@ function common.drawBorder(background, foreground, x, y, w, h, dialog, large, fi
 end
 
 --- A function that will chop off text if it's longer than a specified number.
--- @param text The text to check for overflow.
--- @param max The maximum size of the text.
+-- @tparam string text The text to check for overflow.
+-- @tparam number max The maximum size of the text.
 function common.textOverflow(text, max)
   if #text >= max then
     return text:sub(1, max)

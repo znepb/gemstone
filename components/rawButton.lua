@@ -1,6 +1,5 @@
 --- The button module, but without a border and text.
--- @module rawButton
--- @author znepb
+-- @module[kind=component] rawButton
 
 local rawButton = {}
 
@@ -8,7 +7,7 @@ local buttons = {}
 local enabledButtons = {}
 
 --- Disables a button.
--- @param id The ID of the button to disable.
+-- @tparam number id The ID of the button to disable.
 function rawButton.disableButton(id)
   for i, v in pairs(enabledButtons) do
     if v == id then
@@ -19,11 +18,11 @@ function rawButton.disableButton(id)
 end
 
 --- Creates a new button
--- @param id The ID of the button to create.
--- @param x The X position of the button.
--- @param y The Y position of the button.
--- @param width The width of the button.
--- @param height The height of the button.
+-- @tparam number id The ID of the button to create.
+-- @tparam number x The X position of the button.
+-- @tparam number y The Y position of the button.
+-- @tparam number width The width of the button.
+-- @tparam number height The height of the button.
 function rawButton.add(id, x, y, width, height)
   buttons[id] = {
     id = id,
@@ -35,13 +34,13 @@ function rawButton.add(id, x, y, width, height)
 end
 
 --- Enables a button.
--- @param id The ID of the button to enable.
+-- @tparam number id The ID of the button to enable.
 function rawButton.enableButton(id)
   table.insert(enabledButtons, id)
 end
 
 --- Enables multiple buttons.
--- @param ids A table of IDs to enable.
+-- @tparam table ids A table of IDs to enable.
 function rawButton.enableButtons(ids)
   for i, v in pairs(ids) do
     table.insert(enabledButtons, v)
@@ -54,7 +53,7 @@ function rawButton.disableAll()
 end
 
 --- Initalizes the event manager.
--- @param manager The event manager.
+-- @tparam table manager The event manager.
 function rawButton.init(manager)
   manager.inject(function(re)
     local e, b, x, y = re[1], re[2], re[3], re[4]

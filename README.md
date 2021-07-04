@@ -1,6 +1,6 @@
 # Gemstone
 [![Lua](https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white)](https://www.lua.org/)  
-[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/znepb/cc-drawing-api/blob/master/LICENSE) [![Generic badge](https://img.shields.io/badge/Read%20the-docs-green.svg)](https://znepb.github.io/gemstone/docs/index.html)  
+[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/znepb/cc-drawing-api/blob/master/LICENSE) [![Generic badge](https://img.shields.io/badge/Read%20the-docs-green.svg)](https://gemstone.madefor.cc/)  
 Gemstone is a drawing API for the Minecraft mod [CC-Tweaked](https://tweaked.cc).
 
 ## Demos
@@ -9,8 +9,8 @@ Gemstone is a drawing API for the Minecraft mod [CC-Tweaked](https://tweaked.cc)
 ![Showcasing the context menu capabilities, using a Windows-style file dialog. The button that is pressed is shown in the top left corner of the screen.](https://i.znepb.me/diligent-careless-motor.gif "Showcasing the context menu capabilities, using a Windows-style file dialog. The button that is pressed is shown in the top left corner of the screen.")
 
 ## Documentation
-Docs are currently still semi-work-in-progress. Events aren't documented yet, and I'll eventually switch to Illimuniate. 
-**Docs are available [here](https://znepb.github.io/gemstone/docs/index.html)**
+Docs are currently still semi-work-in-progress. Events aren't documented yet, ~~and I'll eventually switch to Illuaimuniate~~ Docs are now using Illuaminate! 
+**Docs are available [here](https://gemstone.madefor.cc/)**
 
 ## Contribution
 Contributions are very welcome, and if you do make a PR to add a new element to the official repo, it must:

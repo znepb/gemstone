@@ -1,6 +1,5 @@
---- A button api that also draws a fancy border around the button, giving it a rounded effect.
--- @author znepb
--- @module button
+--- A button component that also draws a fancy border around the button, giving it a rounded effect.
+-- @module[kind=component] button
 
 local buttonApi = {}
 local common = require(".drawing.lib.common")
@@ -9,8 +8,8 @@ local buttons = {}
 local enabledButtons = {}
 
 --- Renders a single button.
--- @param id The ID of the button to render.
--- @param ?clicking Whether or not the event cycle is in between down and up.
+-- @tparam number id The ID of the button to render.
+-- @tparam[opt] boolean clicking Whether or not the event cycle is in between down and up.
 -- @see render
 function buttonApi.renderSingle(id, clicking)
   local prev = buttons[id].buttonBorder or term.getBackgroundColor()
@@ -40,13 +39,13 @@ function buttonApi.renderSingle(id, clicking)
 end
 
 --- Enables a button.
--- @param id The ID of the button to enable.
+-- @tparam number id The ID of the button to enable.
 function buttonApi.enableButton(id)
   table.insert(enabledButtons, id)
 end
 
 --- Disables a button.
--- @param id The ID of the button to disable.
+-- @tparam number id The ID of the button to disable.
 function buttonApi.disableButton(id)
   for i, v in pairs(enabledButtons) do
     if v == id then
@@ -57,11 +56,11 @@ function buttonApi.disableButton(id)
 end
 
 --- Creates a new button.
--- @param id The ID of the button. This will be the second parameter of a `button_click` event.
--- @param text The text that will be displayed on the button.
--- @param x The X position of the button. Note, this is the left corner of the button, not the text.
--- @param y The Y position of the button. Same goes for this as for the x parameter.
--- @param theme A theme table.
+-- @tparam number id The ID of the button. This will be the second parameter of a `button_click` event.
+-- @tparam number text The text that will be displayed on the button.
+-- @tparam number x The X position of the button. Note, this is the left corner of the button, not the text.
+-- @tparam number y The Y position of the button. Same goes for this as for the x parameter.
+-- @tparam table theme A theme table.
 function buttonApi.add(id, text, x, y, theme)
   buttons[id] = {
     id = id,
@@ -90,7 +89,7 @@ function buttonApi.disableAll()
 end
 
 --- Initalizes the event manager.
--- @param manager The event manager.
+-- @tparam table manager The event manager.
 function buttonApi.init(manager)
   manager.inject(function(re)
     local e, m, x, y = re[1], re[2], re[3], re[4]

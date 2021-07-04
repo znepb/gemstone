@@ -1,12 +1,11 @@
 --- A rather simple to not have a lot of functions in parallel with a main event listener.
--- @module event
--- @author znepb
+-- @module[kind=library] event
 
 local event = {}
 local eventFunctions = {}
 
 --- Injects a function into the event manager.
--- @param func The function to add to the manager.
+-- @tparam function func The function to add to the manager.
 function event.inject(func)
   table.insert(eventFunctions, func)
 end

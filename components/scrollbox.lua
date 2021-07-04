@@ -1,18 +1,17 @@
 --- A scroll box.
--- @author znepb
--- @module scrollbox
+-- @module[kind=component] scrollbox
 
 local scrollbox = {}
 local marquee = require(".drawing.components.marquee")
 local scrollboxes = {}
 
 --- Create a new scroll box.
--- @param id The ID of the scrollbox.
--- @param x The X position of the scrollbox.
--- @param y The Y position of the scrollbox.
--- @param w The width of the scrollbox.
--- @param h The height of the scrollbox.
--- @param parent The parent terminal of the scrollbox.
+-- @tparam number id The ID of the scrollbox.
+-- @tparam number x The X position of the scrollbox.
+-- @tparam number y The Y position of the scrollbox.
+-- @tparam number w The width of the scrollbox.
+-- @tparam number h The height of the scrollbox.
+-- @tparam table parent The parent terminal of the scrollbox.
 -- @return A terminal-like instance, with a couple more functions.
 function scrollbox.create(id, x, y, w, h, parent)
   local newScrollbox = marquee.create(x, y, w, h, parent)
@@ -27,13 +26,13 @@ function scrollbox.create(id, x, y, w, h, parent)
 end
 
 --- Removes a scrollbox's event listener. Notice this does not clear it, you will have to clear the screen to remove it.
--- @param id The ID of the scroll box.
+-- @tparam number id The ID of the scroll box.
 function scrollbox.remove(id)
   scrollboxes[id] = nil
 end
 
 --- Initalizes the event manager for the scrollbox.
--- @param manager The event manager.
+-- @tparam table manager The event manager.
 function scrollbox.init(manager)
   manager.inject(function(e)
     if e[1] == "mouse_scroll" then

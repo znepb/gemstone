@@ -1,15 +1,14 @@
 --- Basicly the scroll box, but without event listening, so technically it can be used as a marquee sign, etc.
--- @author znepb
--- @module marquee
+-- @module[kind=component] marquee
 
 local marquee = {}
 
 --- Creates a marquee frame.
--- @param x The X position of the marquee frame.
--- @param y The Y position of the marquee frame.
--- @param w The width of the marquee frame.
--- @param h The height of the marquee frame.
--- @param parent The parent term of the marquee window.
+-- @tparam number x The X position of the marquee frame.
+-- @tparam number y The Y position of the marquee frame.
+-- @tparam number w The width of the marquee frame.
+-- @tparam number h The height of the marquee frame.
+-- @tparam table parent The parent term of the marquee window.
 -- @return A 500x500 terminal which can be used like a normal terminal.
 function marquee.create(x, y, w, h, parent)
   local parentWin = window.create(parent, x, y, w, h)

@@ -1,5 +1,5 @@
 --- A fancy looking input with a new read function, which includes a limit for the size.
--- @module input
+-- @module[kind=component] input
 
 local input = {}
 local common = require(".drawing.lib.common")
@@ -7,11 +7,12 @@ local common = require(".drawing.lib.common")
 local inputs = {}
 
 --- Basicly, CC's read function with a custom width parameter.
--- @param _sReplaceChar The character to hide all the characters.
--- @param _tHistory A table containing a history for the textbox.
--- @param _fnComplete A function that is random when the text is completed. The only parameter is the line.
--- @param _sDefault The default text.
--- @param _nLimit The size limit of the read window.
+-- @tparam[opt] byte _sReplaceChar The character to hide all the characters.
+-- @tparam[opt] table _tHistory A table containing a history for the textbox.
+-- @tparam[opt] func _fnComplete A function that is random when the text is completed. The only parameter is the line.
+-- @tparam[opt] string _sDefault The default text.
+-- @tparam[opt] number number _nLimit The size limit of the read window.
+-- @return The text inputted.
 function input.read(_sReplaceChar, _tHistory, _fnComplete, _sDefault, _nLimit)
   term.setCursorBlink(true)
 
@@ -295,15 +296,15 @@ function input.render(id)
 end
 
 --- Creates a new input box.
--- @param id The ID of the text box. Used to remove, render, etc.
--- @param x The X position of the textbox.
--- @param y The Y position of the textbox.
--- @param w The width of the textbox.
--- @param theme The theme to use/
--- @param placeholder The text that will be shown when no text has been entered. Note that this is overidden by default. The difference is that placeholder text does not persist when the textbox is selected.
--- @param history The history table that the read function will draw from.
--- @param replace The replace character, mainly for passwords.
--- @param default The default text that will be entered. For mor information on this, see the placeholder paramerer.
+-- @tparam number id The ID of the text box. Used to remove, render, etc.
+-- @tparam number x The X position of the textbox.
+-- @tparam number y The Y position of the textbox.
+-- @tparam number w The width of the textbox.
+-- @tparam table theme The theme to use.
+-- @tparam[opt] string placeholder The text that will be shown when no text has been entered. Note that this is overidden by default. The difference is that placeholder text does not persist when the textbox is selected.
+-- @tparam[opt] table history The history table that the read function will draw from.
+-- @tparam[opt] byte replace The replace character, mainly for passwords.
+-- @tparam[opt] string default The default text that will be entered. For mor information on this, see the placeholder paramerer.
 function input.create(id, x, y, w, theme, placeholder, history, replace, default)
   term.setTextColor(colors.gray)
 
@@ -326,25 +327,25 @@ function input.create(id, x, y, w, theme, placeholder, history, replace, default
 end
 
 --- Gets the current text inside an input.
--- @param id The ID of the input to retrieve text from.
+-- @tparam number id The ID of the input to retrieve text from.
 function input.getText(id)
   return inputs[id].defaultText
 end
 
 --- Clears an input
--- @param id The ID of the input to clear out.
+-- @tparam number id The ID of the input to clear out.
 function input.clear(id)
   inputs[id].defaultText = ""
 end
 
 --- Removes an input.
--- @param id The ID of the element to remove.
+-- @tparam number id The ID of the element to remove.
 function input.remove(id)
   inputs[id] = nil
 end
 
 --- The event listener for the text box. When the text box has been finished, an event will be queued, entitled "textbox_complete". The first parameter is the ID of the textbox, and the second is the text entered into said textbox.
--- @param manager The event manager.
+-- @tparam table manager The event manager.
 function input.init(manager)
   manager.inject(function(e)
     if e[1] == "mouse_click" then
