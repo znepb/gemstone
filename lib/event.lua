@@ -1,5 +1,5 @@
 --- A rather simple to not have a lot of functions in parallel with a main event listener.
--- @module[kind=library] event
+-- @module[kind=gemlibrary] event
 
 local event = {}
 local eventFunctions = {}

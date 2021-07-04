@@ -1,5 +1,5 @@
 --- A common module for other components to piggyback off of.
--- @module[kind=library] common
+-- @module[kind=gemlibrary] common
 
 local common = {}
 
