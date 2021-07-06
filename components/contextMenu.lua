@@ -109,7 +109,6 @@ function contextMenu.init(manager)
           end
 
           if v.persist == nil or v.persist == false then
-            print("NonPersist")
             contextMenu.dismiss(mid)
           end
         end

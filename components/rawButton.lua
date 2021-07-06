@@ -2,6 +2,7 @@
 -- @module[kind=component] rawButton
 
 local rawButton = {}
+local debugger = peripheral.wrap("debugger_0")
 
 local buttons = {}
 local enabledButtons = {}
@@ -74,7 +75,15 @@ function rawButton.init(manager)
       if b == 1 then
         for i, v in pairs(enabledButtons) do
           local b = buttons[v]
-          if x >= b.x and y >= b.y and x <= b.x + b.width - 1 and y <= b.y + b.height - 1 then
+
+          local oX, oY = 0, 0
+          if b.uTerm and b.uTerm.getScroll then
+            oX, oY = b.uTerm.getScroll()
+            oX = oX - 1
+            oY = -oY - 1
+          end
+
+          if x >= b.x + oX and y >= b.y + oY and x <= b.x + oX + b.width - 1 and y <= b.y + oY + b.height - 1 then
             os.queueEvent(b.eventNamePrefix .. "button_click", b.id, x, y)
           end
         end
@@ -83,7 +92,15 @@ function rawButton.init(manager)
       if b == 1 then
         for i, v in pairs(enabledButtons) do
           local b = buttons[v]
-          if x >= b.x and y >= b.y and x <= b.x + b.width - 1 and y <= b.y + b.height - 1 then
+
+          local oX, oY = 0, 0
+          if b.uTerm and b.uTerm.getScroll then
+            oX, oY = b.uTerm.getScroll()
+            oX = oX - 1
+            oY = -oY - 1
+          end
+
+          if x >= b.x + oX and y >= b.y + oY and x <= b.x + oX + b.width - 1 and y <= b.y + oY + b.height - 1 then
             os.queueEvent(b.eventNamePrefix .. "button_down", b.id, x, y)
           end
         end
