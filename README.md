@@ -1,4 +1,4 @@
-# Gemstone
+# ![gemstone](https://i.znepb.me/passionate-closed-reach.png) Gemstone
 [![Lua](https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white)](https://www.lua.org/)  
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/znepb/cc-drawing-api/blob/master/LICENSE) [![Generic badge](https://img.shields.io/badge/Read%20the-docs-green.svg)](https://gemstone.madefor.cc/)  
 Gemstone is a drawing API for the Minecraft mod [CC-Tweaked](https://tweaked.cc).
