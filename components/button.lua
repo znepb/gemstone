@@ -3,57 +3,76 @@
 
 local buttonApi = {}
 local common = require(".drawing.lib.common")
-
+local rawButton = require(".drawing.components.rawButton")
 local buttons = {}
-local enabledButtons = {}
+
+-- @section Rendering
 
 --- Renders a single button.
--- @tparam number id The ID of the button to render.
--- @tparam[opt] boolean clicking Whether or not the event cycle is in between down and up.
--- @see render
-function buttonApi.renderSingle(id, clicking)
-  local prev = buttons[id].buttonBorder or term.getBackgroundColor()
+-- @tparam string id The ID of the button to render.
+-- @tparam[opt] boolean clicking Whether or not to render the border with the click color rather than the button color.
+-- @tparam[opt] boolean dontEnable If true, the button won't be enabled.
+function buttonApi.renderSingle(id, clicking, dontEnable)
   local b = buttons[id]
 
-  if not b then error("Button ID " .. id .. " is non-existant") end
+  local previous = term.current()
+  term.redirect(b.term)
+  
+  local bg = term.getBackgroundColor()
+  local c = b.background
 
-  common.setColors(b.foreground, b.background)
+  if clicking then c = b.click end
+  common.drawBorder(b.border or bg, c, b.x, b.y, #b.text + 4, 3)
   term.setCursorPos(b.x + 1, b.y + 1)
+  common.setColors(b.foreground, b.background)
   term.write((" %s "):format(b.text))
 
-  local border = clicking and b.click or b.background
+  if not dontEnable then rawButton.enableSingle(id) end
+  term.setBackgroundColor(bg)
 
-  common.drawBorder(prev, border, b.x, b.y, #b.text + 4, 3)
+  term.redirect(previous)
+end
 
-  local found = false
-
-  for i, v in pairs(enabledButtons) do
-    if v == id then
-      found = true
-    end
-  end
-
-  if not found then
-    table.insert(enabledButtons, id)
+--- Renders multiple buttons.
+-- @tparam table ids The table of IDs to render.
+function buttonApi.render(ids)
+  for i, v in pairs(ids) do
+    buttonApi.renderSingle(v)
   end
 end
 
---- Enables a button.
--- @tparam number id The ID of the button to enable.
-function buttonApi.enableButton(id)
-  table.insert(enabledButtons, id)
+-- @section Disabling & enabling
+
+--- Disables a button.
+-- @tparam number id The ID of the button to disable.
+function buttonApi.disableSingle(id)
+  rawButton.disableSingle(id)
 end
 
 --- Disables a button.
 -- @tparam number id The ID of the button to disable.
-function buttonApi.disableButton(id)
-  for i, v in pairs(enabledButtons) do
-    if v == id then
-      table.remove(enabledButtons, i)
-      break
-    end
-  end
+function buttonApi.disable(ids)
+  rawButton.disable(ids)
 end
+
+--- Disables all buttons in the manager.
+function buttonApi.disableAll()
+  rawButton.disableAll()
+end
+
+--- Enables a button.
+-- @tparam number id The ID of the button to enable.
+function buttonApi.enableSingle(id)
+  rawButton.enableSingle(id)
+end
+
+--- Enables multiple buttons.
+-- @tparam table ids A table of IDs to enable.
+function buttonApi.enable(ids)
+  rawButton.enable(ids)
+end
+
+-- @section Initalization
 
 --- Creates a new button.
 -- @tparam number id The ID of the button. This will be the second parameter of a `button_click` event.
@@ -61,58 +80,39 @@ end
 -- @tparam number x The X position of the button. Note, this is the left corner of the button, not the text.
 -- @tparam number y The Y position of the button. Same goes for this as for the x parameter.
 -- @tparam table theme A theme table.
-function buttonApi.add(id, text, x, y, theme)
+-- @tparam table uTerm The terminal to draw the button to.
+function buttonApi.add(id, text, x, y, theme, uTerm)
   buttons[id] = {
     id = id,
-    text = text,
     x = x,
     y = y,
+    text = text,
+    rawButton = rawButton.add(id, x + 1, y + 1, #text + 2, 1, uTerm, "__gemstone_internal_"),
     background = theme.button.buttonColor,
-    buttonBorder = theme.button.buttonBorder,
     foreground = theme.button.textColor,
-    click = theme.button.clickBorderColor
+    click = theme.button.clickBorderColor,
+    border = theme.button.buttonBorder,
+    term = uTerm or term.current()
   }
 end
 
---- Renders a table of buttons.
--- @param buttons A table of buttons to render.
--- @see renderSingle
-function buttonApi.render(buttons)
-  for i, v in pairs(buttons) do
-    buttonApi.renderSingle(v)
-  end
-end
 
---- Disables all buttons.
-function buttonApi.disableAll()
-  enabledButtons = {}
-end
+-- ! NOTICE ! --
+-- The "__gemstone_internal_button_click" event is NOT meant to be used by your application!
+-- Use the `button_click` event, or if you want, use the rawButton component.
 
---- Initalizes the event manager.
--- @tparam table manager The event manager.
+--- Initalizes the button manager.
+-- @tparam table manager The manager to initalize to.
 function buttonApi.init(manager)
-  manager.inject(function(re)
-    local e, m, x, y = re[1], re[2], re[3], re[4]
+  rawButton.init(manager)
 
-    if e == "mouse_up" then
-      if m == 1 then
-        for i, v in pairs(enabledButtons) do
-          local b = buttons[v]
-          if x >= b.x + 1 and y == b.y + 1 and x <= b.x + #b.text + 2 then
-            buttonApi.renderSingle(b.id, false)
-            os.queueEvent("button_click", b.id, x, y)
-          end
-        end
-      end
-    elseif e == "mouse_click" then
-      if m == 1 then
-        for i, v in pairs(enabledButtons) do
-          local b = buttons[v]
-          if x >= b.x + 1 and y == b.y + 1 and x <= b.x + #b.text + 2 then
-            buttonApi.renderSingle(b.id, true)
-          end
-        end
-      end
+  manager.inject(function(re)
+    if re[1] == "__gemstone_internal_button_down" then
+      buttonApi.renderSingle(buttons[re[2]].id, true, true)
+      os.queueEvent("button_down", re[2], re[3], re[4])
+    elseif re[1] == "__gemstone_internal_button_click" then
+      buttonApi.renderSingle(buttons[re[2]].id, false, true)
+      os.queueEvent("button_click", re[2], re[3], re[4])
     end
   end)
 end

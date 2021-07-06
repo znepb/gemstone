@@ -14,8 +14,15 @@ end
 function event.listen()
   while true do
     local e = {os.pullEvent()}
+    local newFunctions = {}
 
-    for i, v in pairs(eventFunctions) do v(e) end
+    for i, v in pairs(eventFunctions) do
+      table.insert(newFunctions, function()
+        v(e)
+      end)
+    end
+
+    parallel.waitForAll(table.unpack(newFunctions))
   end
 end
 

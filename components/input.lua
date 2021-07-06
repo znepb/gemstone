@@ -5,74 +5,88 @@ local input = {}
 local common = require(".drawing.lib.common")
 
 local inputs = {}
+local activeInput
 
---- Basicly, CC's read function with a custom width parameter.
+--- Basicly, CC's read function with a width parameter.
+-- @tparam string id The ID of the input that is being focused.
 -- @tparam[opt] byte _sReplaceChar The character to hide all the characters.
 -- @tparam[opt] table _tHistory A table containing a history for the textbox.
 -- @tparam[opt] func _fnComplete A function that is random when the text is completed. The only parameter is the line.
 -- @tparam[opt] string _sDefault The default text.
--- @tparam[opt] number number _nLimit The size limit of the read window.
+-- @tparam[opt] number _nLimit The size limit of the read window.
 -- @return The text inputted.
-function input.read(_sReplaceChar, _tHistory, _fnComplete, _sDefault, _nLimit)
+function input.read(id, _sReplaceChar, _tHistory, _fnComplete, _sDefault, _nLimit)
   term.setCursorBlink(true)
 
-  local sLine
+  activeInput = {
+    id = id
+  }
+
+  activeInput.w = _nLimit or term.getSize()
+
+  activeInput._tHistory = _tHistory
+
   if type(_sDefault) == "string" then
-    sLine = _sDefault
+    activeInput.sLine = _sDefault
   else
-    sLine = ""
+    activeInput.sLine = ""
   end
-  local nHistoryPos
-  local nPos, nScroll = #sLine, 0
+  activeInput.nPos, activeInput.nScroll = #activeInput.sLine, 0
   if _sReplaceChar then
     _sReplaceChar = string.sub(_sReplaceChar, 1, 1)
   end
 
-  local tCompletions
-  local nCompletion
-  local function recomplete()
-    if _fnComplete and nPos == #sLine then
-      tCompletions = _fnComplete(sLine)
-      if tCompletions and #tCompletions > 0 then
-        nCompletion = 1
+  function activeInput.recomplete()
+    if _fnComplete and activeInput.nPos == #activeInput.sLine then
+      activeInput.tCompletions = _fnComplete(activeInput.sLine)
+      if activeInput.tCompletions and #activeInput.tCompletions > 0 then
+        activeInput.tCompletions = 1
       else
-        nCompletion = nil
+        activeInput.tCompletions = nil
       end
     else
-      tCompletions = nil
-      nCompletion = nil
+      activeInput.tCompletions = nil
+      activeInput.tCompletions = nil
     end
   end
 
-  local function uncomplete()
-    tCompletions = nil
-    nCompletion = nil
+  function activeInput.uncomplete()
+    activeInput.tCompletions = nil
+    activeInput.nCompletion = nil
   end
 
-  local w = _nLimit or term.getSize()
-  local sx = term.getCursorPos()
+  function activeInput.complete(quiet)
+    term.setCursorBlink(false)
+    if quiet == nil then os.queueEvent("textbox_complete", activeInput.id, activeInput.sLine) end
+    inputs[activeInput.id].defaultText = activeInput.sLine
+    input.render(activeInput.id)
+    activeInput = nil
+  end
 
-  local function redraw(_bClear)
-    local cursor_pos = nPos - nScroll
-    if sx + cursor_pos >= w then
+  activeInput.w = _nLimit or term.getSize()
+  activeInput.sx = term.getCursorPos()
+
+  function activeInput.redraw(_bClear)
+    local cursor_pos = activeInput.nPos - activeInput.nScroll
+    if activeInput.sx + cursor_pos >= activeInput.w then
       -- We've moved beyond the RHS, ensure we're on the edge.
-      nScroll = sx + nPos - w
+      activeInput.nScroll = activeInput.sx + activeInput.nPos - activeInput.w
     elseif cursor_pos < 0 then
       -- We've moved beyond the LHS, ensure we're on the edge.
-      nScroll = nPos
+      activeInput.nScroll = activeInput.nPos
     end
 
     local _, cy = term.getCursorPos()
-    term.setCursorPos(sx, cy)
+    term.setCursorPos(activeInput.sx, cy)
     local sReplace = _bClear and " " or _sReplaceChar
     if sReplace then
-      term.write(string.rep(sReplace, math.max(#sLine - nScroll, 0)))
+      term.write(string.rep(sReplace, math.max(#activeInput.sLine - activeInput.nScroll, 0)))
     else
-      term.write(string.sub(sLine, nScroll + 1))
+      term.write(string.sub(activeInput.sLine, activeInput.nScroll + 1))
     end
 
-    if nCompletion then
-      local sCompletion = tCompletions[nCompletion]
+    if activeInput.nCompletion then
+      local sCompletion = activeInput.tCompletions[activeInput.nCompletion]
       local oldText, oldBg
       if not _bClear then
         oldText = term.getTextColor()
@@ -80,8 +94,8 @@ function input.read(_sReplaceChar, _tHistory, _fnComplete, _sDefault, _nLimit)
         term.setTextColor(colors.white)
         term.setBackgroundColor(colors.gray)
       end
-      if sReplace then
-        term.write(string.rep(sReplace, #sCompletion))
+      if activeInput.sReplace then
+        term.write(string.rep(activeInput.sReplace, #sCompletion))
       else
         term.write(sCompletion)
       end
@@ -91,188 +105,31 @@ function input.read(_sReplaceChar, _tHistory, _fnComplete, _sDefault, _nLimit)
       end
     end
 
-    term.setCursorPos(sx + nPos - nScroll, cy)
-   end
-
-  local function clear()
-    redraw(true)
+    term.setCursorPos(activeInput.sx + activeInput.nPos - activeInput.nScroll, cy)
   end
 
-  recomplete()
-  redraw()
+  function activeInput.clear()
+    activeInput.redraw(true)
+  end
 
-  local function acceptCompletion()
-    if nCompletion then
+  activeInput.recomplete()
+  activeInput.redraw()
+
+  function activeInput.acceptCompletion()
+    if activeInput.nCompletion then
       -- Clear
-      clear()
+      activeInput.clear()
 
       -- Find the common prefix of all the other suggestions which start with the same letter as the current one
-      local sCompletion = tCompletions[nCompletion]
-      sLine = sLine .. sCompletion
-      nPos = #sLine
+      local sCompletion = activeInput.tCompletions[activeInput.nCompletion]
+      activeInput.sLine = activeInput.sLine .. sCompletion
+      activeInput.nPos = #activeInput.sLine
 
       -- Redraw
-      recomplete()
-      redraw()
+      activeInput.recomplete()
+      activeInput.redraw()
     end
   end
-    
-  while true do
-    local sEvent, param, param1, param2 = os.pullEvent()
-    if sEvent == "char" then
-      -- Typed key
-      clear()
-      sLine = string.sub(sLine, 1, nPos) .. param .. string.sub(sLine, nPos + 1)
-      nPos = nPos + 1
-      recomplete()
-      redraw()
-
-    elseif sEvent == "paste" then
-      -- Pasted text
-      clear()
-      sLine = string.sub(sLine, 1, nPos) .. param .. string.sub(sLine, nPos + 1)
-      nPos = nPos + #param
-      recomplete()
-      redraw()
-    elseif sEvent == "key" then
-      if param == keys.enter or param == keys.numPadEnter then
-        -- Enter/Numpad Enter
-        if nCompletion then
-          clear()
-          uncomplete()
-            redraw()
-        end
-        break
-      elseif param == keys.left then
-        -- Left
-        if nPos > 0 then
-            clear()
-            nPos = nPos - 1
-            recomplete()
-            redraw()
-        end
-      elseif param == keys.right then
-        -- Right
-        if nPos < #sLine then
-          -- Move right
-          clear()
-          nPos = nPos + 1
-          recomplete()
-          redraw()
-        else
-          -- Accept autocomplete
-          acceptCompletion()
-        end
-      elseif param == keys.up or param == keys.down then
-        -- Up or down
-        if nCompletion then
-          -- Cycle completions
-          clear()
-          if param == keys.up then
-            nCompletion = nCompletion - 1
-            if nCompletion < 1 then
-              nCompletion = #tCompletions
-            end
-          elseif param == keys.down then
-            nCompletion = nCompletion + 1
-            if nCompletion > #tCompletions then
-              nCompletion = 1
-            end
-          end
-          redraw()
-        elseif _tHistory then
-          -- Cycle history
-          clear()
-          if param == keys.up then
-            -- Up
-            if nHistoryPos == nil then
-              if #_tHistory > 0 then
-                nHistoryPos = #_tHistory
-              end
-            elseif nHistoryPos > 1 then
-              nHistoryPos = nHistoryPos - 1
-            end
-          else
-            -- Down
-            if nHistoryPos == #_tHistory then
-              nHistoryPos = nil
-            elseif nHistoryPos ~= nil then
-              nHistoryPos = nHistoryPos + 1
-            end
-          end
-          if nHistoryPos then
-            sLine = _tHistory[nHistoryPos]
-            nPos, nScroll = #sLine, 0
-          else
-            sLine = ""
-            nPos, nScroll = 0, 0
-          end
-          uncomplete()
-          redraw()
-        end
-
-        elseif param == keys.backspace then
-          -- Backspace
-          if nPos > 0 then
-            clear()
-            sLine = string.sub(sLine, 1, nPos - 1) .. string.sub(sLine, nPos + 1)
-            nPos = nPos - 1
-            if nScroll > 0 then
-              nScroll = nScroll - 1
-            end
-            recomplete()
-            redraw()
-          end
-        elseif param == keys.home then
-          -- Home
-          if nPos > 0 then
-            clear()
-            nPos = 0
-            recomplete()
-            redraw()
-          end
-        elseif param == keys.delete then
-          -- Delete
-          if nPos < #sLine then
-            clear()
-            sLine = string.sub(sLine, 1, nPos) .. string.sub(sLine, nPos + 2)
-            recomplete()
-            redraw()
-          end
-        elseif param == keys["end"] then
-          -- End
-          if nPos < #sLine then
-            clear()
-            nPos = #sLine
-            recomplete()
-            redraw()
-          end
-
-        elseif param == keys.tab then
-          -- Tab (accept autocomplete)
-          acceptCompletion()
-        end
-
-    elseif sEvent == "mouse_click" or sEvent == "mouse_drag" and param == 1 then
-      local _, cy = term.getCursorPos()
-      if param1 >= sx and param1 <= w and param2 == cy then
-        -- Ensure we don't scroll beyond the current line
-        nPos = math.min(math.max(nScroll + param1 - sx, 0), #sLine)
-        redraw()
-      end
-    elseif sEvent == "term_resize" then
-      -- Terminal resized
-      w = _nLimit or term.getSize()
-      redraw()
-    end
-  end
-
-  local _, cy = term.getCursorPos()
-  term.setCursorBlink(false)
-  term.setCursorPos(w + 1, cy)
-  print()
-
-  return sLine
 end
 
 --- Renders a textbox.
@@ -296,7 +153,7 @@ function input.render(id)
 end
 
 --- Creates a new input box.
--- @tparam number id The ID of the text box. Used to remove, render, etc.
+-- @tparam string id The ID of the text box. Used to remove, render, etc.
 -- @tparam number x The X position of the textbox.
 -- @tparam number y The Y position of the textbox.
 -- @tparam number w The width of the textbox.
@@ -336,6 +193,10 @@ end
 -- @tparam number id The ID of the input to clear out.
 function input.clear(id)
   inputs[id].defaultText = ""
+
+  if activeInput and activeInput.complete then
+    activeInput.complete(true)
+  end
 end
 
 --- Removes an input.
@@ -350,6 +211,7 @@ function input.init(manager)
   manager.inject(function(e)
     if e[1] == "mouse_click" then
       local m, x, y = e[2], e[3], e[4]
+      local found = false
 
       for i, v in pairs(inputs) do
         if x >= v.x and y >= v.y and y <= v.y + 2 and x <= v.x + v.w - 1 then
@@ -357,13 +219,168 @@ function input.init(manager)
           term.setTextColor(v.textColor or colors.gray)
           paintutils.drawFilledBox(v.x + 1, v.y + 1, v.x + v.w- 2, v.y + 1, v.backgroundColor or colors.white)
 
-          term.setCursorPos(v.x + 1, v.y + 1)
-          local newText = input.read(v.replaceCharacter, v.history, nil, v.defaultText, v.w + 1)
-          v.defaultText = newText
-          input.render(i)
+          if activeInput and activeInput.id ~= i or activeInput ==nil0 then
+            if activeInput then activeInput.complete() end
 
-          os.queueEvent("textbox_complete", i, newText)
+            found = true
+            term.setCursorPos(v.x + 1, v.y + 1)
+
+            input.read(i, v.replaceCharacter, v.history, nil, v.defaultText, v.w)
+          end
         end
+      end
+
+      if found == false and activeInput then
+        activeInput.complete()
+      end
+    end
+  
+    if activeInput then
+      local sEvent, param, param1, param2 = e[1], e[2], e[3], e[4] -- Haha, no way I am going to rewrite this whole thing!
+
+      if sEvent == "char" then
+        -- Typed key
+        activeInput.clear()
+        activeInput.sLine = string.sub(activeInput.sLine, 1, activeInput.nPos) .. param .. string.sub(activeInput.sLine, activeInput.nPos + 1)
+        activeInput.nPos = activeInput.nPos + 1
+        activeInput.recomplete()
+        activeInput.redraw()
+      elseif sEvent == "paste" then
+        -- Pasted text
+        activeInput. clear()
+        activeInput.sLine = string.sub(activeInput.sLine, 1, activeInput.nPos) .. param .. string.sub(activeInput.sLine, activeInput.nPos + 1)
+        activeInput.nPos = activeInput.nPos + #param
+        activeInput.recomplete()
+        activeInput.redraw()
+      elseif sEvent == "key" then
+        if param == keys.enter or param == keys.numPadEnter then
+          -- Enter/Numpad Enter
+          if activeInput.nCompletion then
+            activeInput.clear()
+            activeInput.uncomplete()
+            activeInput.redraw()
+          end
+          
+          activeInput.complete()
+        elseif param == keys.left then
+          -- Left
+          if activeInput.nPos > 0 then
+              activeInput.clear()
+              activeInput.nPos = activeInput.nPos - 1
+              activeInput.recomplete()
+              activeInput.redraw()
+          end
+        elseif param == keys.right then
+          -- Right
+          if activeInput.nPos < #activeInput.sLine then
+            -- Move right
+            activeInput.clear()
+            activeInput.nPos = activeInput.nPos + 1
+            activeInput.recomplete()
+            activeInput.redraw()
+          else
+            -- Accept autocomplete
+            activeInput.acceptCompletion()
+          end
+        elseif param == keys.up or param == keys.down then
+          -- Up or down
+          if activeInput.nCompletion then
+            -- Cycle completions
+            activeInput.clear()
+            if param == keys.up then
+              activeInput.nCompletion = activeInput.nCompletion - 1
+              if activeInput.nCompletion < 1 then
+                activeInput.nCompletion = #activeInput.tCompletions
+              end
+            elseif param == keys.down then
+              activeInput.nCompletion = activeInput.nCompletion + 1
+              if activeInput.nCompletion > #activeInput.tCompletions then
+                activeInput.nCompletion = 1
+              end
+            end
+            activeInput.redraw()
+          elseif activeInput._tHistory then
+            -- Cycle history
+            activeInput.clear()
+            if param == keys.up then
+              -- Up
+              if activeInput.nHistoryPos == nil then
+                if #activeInput._tHistory > 0 then
+                  activeInput.nHistoryPos = #activeInput._tHistory
+                end
+              elseif activeInput.nHistoryPos > 1 then
+                activeInput.nHistoryPos = activeInput.nHistoryPos - 1
+              end
+            else
+              -- Down
+              if activeInput.nHistoryPos == #activeInput._tHistory then
+                activeInput.nHistoryPos = nil
+              elseif activeInput.nHistoryPos ~= nil then
+                activeInput.nHistoryPos = activeInput.nHistoryPos + 1
+              end
+            end
+            if activeInput.nHistoryPos then
+              activeInput.sLine = activeInput._tHistory[activeInput.nHistoryPos]
+              activeInput.nPos, activeInput.nScroll = #activeInput.sLine, 0
+            else
+              activeInput.sLine = ""
+              activeInput.nPos, activeInput.nScroll = 0, 0
+            end
+            activeInput.uncomplete()
+            activeInput.redraw()
+          end
+
+        elseif param == keys.backspace then
+          -- Backspace
+          if activeInput.nPos > 0 then
+            activeInput.clear()
+            activeInput.sLine = string.sub(activeInput.sLine, 1, activeInput.nPos - 1) .. string.sub(activeInput.sLine, activeInput.nPos + 1)
+            activeInput.nPos = activeInput.nPos - 1
+            if activeInput.nScroll > 0 then
+              activeInput.nScroll = activeInput.nScroll - 1
+            end
+            activeInput.recomplete()
+            activeInput.redraw()
+          end
+        elseif param == keys.home then
+          -- Home
+          if activeInput.nPos > 0 then
+            activeInput.clear()
+            activeInput.nPos = 0
+            activeInput.recomplete()
+            activeInput.redraw()
+          end
+        elseif param == keys.delete then
+          -- Delete
+          if activeInput.nPos < #activeInput.sLine then
+            activeInput.clear()
+            activeInput.sLine = string.sub(activeInput.sLine, 1, activeInput.nPos) .. string.sub(activeInput.sLine, activeInput.nPos + 2)
+            activeInput.recomplete()
+            activeInput.redraw()
+          end
+        elseif param == keys["end"] then
+          -- End
+          if activeInput.nPos < #activeInput.sLine then
+            activeInput.clear()
+            activeInput.nPos = #activeInput.sLine
+            activeInput.recomplete()
+            activeInput.redraw()
+          end
+        elseif param == keys.tab then
+          -- Tab (accept autocomplete)
+          activeInput.acceptCompletion()
+        end
+      elseif sEvent == "mouse_click" or sEvent == "mouse_drag" and param == 1 and param1 and param2 then
+        local _, cy = term.getCursorPos()
+        if param1 >= activeInput.sx and param1 <= activeInput.w and param2 == cy then
+          -- Ensure we don't scroll beyond the current line
+          activeInput.nPos = math.min(math.max(activeInput.nScroll + param1 - activeInput.sx, 0), #activeInput.sLine)
+          activeInput.redraw()
+        end
+      elseif sEvent == "term_resize" then
+        -- Terminal resized
+        activeInput.w = activeInput._nLimit or term.getSize()
+        activeInput.redraw()
       end
     end
   end)
