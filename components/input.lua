@@ -80,9 +80,14 @@ function input.read(id, _sReplaceChar, _tHistory, _fnComplete, _sDefault, _nLimi
     term.setCursorPos(activeInput.sx, cy)
     local sReplace = _bClear and " " or _sReplaceChar
     if sReplace then
-      term.write(string.rep(sReplace, math.max(#activeInput.sLine - activeInput.nScroll, 0)))
+      term.write(
+        common.textOverflow(
+          string.rep(sReplace, 
+          math.max(#activeInput.sLine - activeInput.nScroll, 0)
+        ), activeInput.w - 2)
+      )
     else
-      term.write(string.sub(activeInput.sLine, activeInput.nScroll + 1))
+      term.write(common.textOverflow(string.sub(activeInput.sLine, activeInput.nScroll + 1), activeInput.w - 2))
     end
 
     if activeInput.nCompletion then
@@ -215,16 +220,17 @@ function input.init(manager)
 
       for i, v in pairs(inputs) do
         if x >= v.x and y >= v.y and y <= v.y + 2 and x <= v.x + v.w - 1 then
-          common.drawBorder(v.backgroundColor or colors.white, v.borderSelectedColor or colors.lightBlue, v.x, v.y, v.w, 3, nil, true)
-          term.setTextColor(v.textColor or colors.gray)
-          paintutils.drawFilledBox(v.x + 1, v.y + 1, v.x + v.w- 2, v.y + 1, v.backgroundColor or colors.white)
-
-          if activeInput and activeInput.id ~= i or activeInput ==nil0 then
+          if activeInput and activeInput.id ~= i or activeInput == nil then
+            common.drawBorder(v.backgroundColor or colors.white, v.borderSelectedColor or colors.lightBlue, v.x, v.y, v.w, 3, nil, true)
+            term.setTextColor(v.textColor or colors.gray)
+            paintutils.drawFilledBox(v.x + 1, v.y + 1, v.x + v.w- 2, v.y + 1, v.backgroundColor or colors.white)
+          
             if activeInput then activeInput.complete() end
 
             found = true
             term.setCursorPos(v.x + 1, v.y + 1)
 
+            os.queueEvent("textbox_focus", i)
             input.read(i, v.replaceCharacter, v.history, nil, v.defaultText, v.w)
           end
         end

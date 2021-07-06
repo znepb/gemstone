@@ -1,5 +1,5 @@
 --- Context menus, with seperators, and buttons. Fancy!
--- @module[kind=component] components
+-- @module[kind=component] contextMenu
 
 local contextMenu = {}
 local menus = {}
