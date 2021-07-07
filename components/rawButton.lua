@@ -2,8 +2,6 @@
 -- @module[kind=component] rawButton
 
 local rawButton = {}
-local debugger = peripheral.wrap("debugger_0")
-
 local buttons = {}
 local enabledButtons = {}
 

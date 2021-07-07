@@ -1,9 +1,12 @@
 --- Context menus, with seperators, and buttons. Fancy!
 -- @module[kind=component] contextMenu
 
+local args = { ... }
+local path = fs.combine(args[2], "../../")
+
 local contextMenu = {}
 local menus = {}
-local common = require(".drawing.lib.common")
+local common = require("/" .. fs.combine(path, "lib", "common"))
 
 --- Renders a context menu.
 -- @tparam number id The ID of the context menu to render.

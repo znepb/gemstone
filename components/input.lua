@@ -1,8 +1,11 @@
 --- A fancy looking input with a new read function, which includes a limit for the size.
 -- @module[kind=component] input
 
+local args = { ... }
+local path = fs.combine(args[2], "../../")
+
 local input = {}
-local common = require(".drawing.lib.common")
+local common = require("/" .. fs.combine(path, "lib", "common"))
 
 local inputs = {}
 local activeInput

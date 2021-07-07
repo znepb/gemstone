@@ -1,8 +1,11 @@
 --- A scroll box.
 -- @module[kind=component] scrollbox
 
+local args = { ... }
+local path = fs.combine(args[2], "../../")
+
 local scrollbox = {}
-local marquee = require(".drawing.components.marquee")
+local marquee = require("/" .. fs.combine(path, "components", "marquee"))
 local scrollboxes = {}
 
 --- Create a new scroll box.

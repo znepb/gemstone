@@ -1,9 +1,12 @@
 --- A dialog box that can show a title, description, and an OK button.
 -- @module[kind=component] dialog
 
+local args = { ... }
+local path = fs.combine(args[2], "../../")
+
 local dialogApi = {}
-local text = require(".drawing.components.text")
-local common = require(".drawing.lib.common")
+local text = require("/" .. fs.combine(path, "components", "text"))
+local common = require("/" .. fs.combine(path, "lib", "common"))
 
 --- Create a dialog element, and render it.
 -- @tparam string title The title of the dialog UI.
@@ -52,7 +55,7 @@ end
 -- @tparam table button The button manager used at creation.
 -- @tparam table scroll The scroll manager used at creation.
 function dialogApi.dismiss(id, button, scroll)
-  button.disableButton("ok-" .. id)
+  button.disableSingle("ok-" .. id)
   scroll.remove("scroll-" .. id)
 end
 

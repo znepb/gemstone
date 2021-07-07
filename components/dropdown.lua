@@ -1,11 +1,14 @@
 --- A dropdown element to select many things from. Currently buggy and unfinished.
 -- @module[kind=component] dropdown
 
+local args = { ... }
+local path = fs.combine(args[2], "../../")
+
 local dropdown = {}
 local dropdowns = {}
 
-local button = require(".drawing.components.button")
-local contextMenu = require(".drawing.components.contextMenu")
+local button = require("/" .. fs.combine(path, "components", "button"))
+local contextMenu = require("/" .. fs.combine(path, "components", "contextMenu"))
 
 --- Creates a new dropdown.
 -- @tparam string id The ID of the new dropdown.

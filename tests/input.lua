@@ -32,6 +32,7 @@ xpcall(function()
           
           repeat local _, button = os.pullEvent("button_click") until button == "ok-" .. id
           input.clear("dialogInput")
+          dialog.dismiss("dialogInput", button, scrollbox)
           render()
         end
       end

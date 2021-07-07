@@ -1,9 +1,12 @@
 --- A button component that also draws a fancy border around the button, giving it a rounded effect.
 -- @module[kind=component] button
 
+local args = { ... }
+local path = fs.combine(args[2], "../../")
+
 local buttonApi = {}
-local common = require(".drawing.lib.common")
-local rawButton = require(".drawing.components.rawButton")
+local common = require("/" .. fs.combine(path, "lib", "common"))
+local rawButton = require("/" .. fs.combine(path, "components", "rawButton"))
 local buttons = {}
 
 -- @section Rendering
