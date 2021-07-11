@@ -11,8 +11,9 @@ return {
   contextMenu = {
     background = colors.lightGray,
     disabled = colors.gray,
-    active = colors.white,
-    selected = colors.gray
+    active = colors.black,
+    selected = colors.gray,
+    selectedText = colors.lightGray
   },
   dialog = {
     backgroundColor = colors.white,

@@ -72,7 +72,8 @@ function contextMenu.create(id, x, y, elements, theme, presist)
     backgroundColor = theme.contextMenu.background,
     disabledColor = theme.contextMenu.disabled,
     activeColor = theme.contextMenu.active,
-    selectedColor = theme.contextMenu.selected
+    selectedColor = theme.contextMenu.selected,
+    selectedText = theme.contextMenu.selectedText
   }
   contextMenu.render(id)
 end
@@ -91,6 +92,7 @@ function contextMenu.init(manager)
                 if y == v.y + i then
                   term.setCursorPos(v.x + 1, v.y + i)
                   term.setBackgroundColor(v.selectedColor)
+                  term.setTextColor(v.selectedText)
                   term.write(e.name .. (" "):rep(v.w - #e.name - 2))
                 end
               end
