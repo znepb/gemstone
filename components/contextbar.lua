@@ -34,6 +34,24 @@ function contextBar.create(options, theme, baseColor)
   }
 end
 
+--- Modifys an existing item in the context bar.
+-- @tparam number menuId The ID of the menu to set.
+-- @tparam number buttonId The ID of the button to modify.
+-- @tparam table set What to set the updated context selection to.
+function contextBar.modify(menuId, buttonId, set)
+  for i, v in pairs(bar.options) do
+    if v.id == menuId then
+      for i2, v2 in pairs(v) do
+        if v2.id == buttonId then
+          bar.options[i][i2] = set
+          break
+        end
+      end
+      break
+    end
+  end
+end
+
 --- Gets the context menu manager
 -- @return An instance of the contextMenu component.
 -- @see contextMenu
