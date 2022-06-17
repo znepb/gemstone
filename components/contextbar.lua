@@ -107,7 +107,7 @@ function contextBar.init(manager)
           term.setTextColor(bar.theme.contextMenu.selectedText)
           term.write(" " .. v.name .. " ")
           term.setBackgroundColor(pre)
-          contextMenu.create(v.id, v.position, 2, v.items, bar.theme)
+          contextMenu.create(v.id, v.position, 2, v.items, bar.theme, nil, true)
           bar.activeMenuId = v.id
         end
       end

@@ -59,7 +59,7 @@ function dropdown.init(manager)
         local id = e[2]:gsub("%-dropdown%-button$", "")
         local d = dropdowns[id]
         term.setBackgroundColor(d.preRender)
-        contextMenu.create("dropdown-content-" .. id, d.x + 1, d.y + 3, d.objects, d.theme)
+        contextMenu.create("dropdown-content-" .. id, d.x + 1, d.y + 3, d.objects, d.theme, nil, true)
         os.queueEvent("dropdown_open", id)
       end
     elseif e[1] == "context_menu_select" then

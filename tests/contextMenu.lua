@@ -1,6 +1,6 @@
-local contentMenu = require(".drawing.components.contextMenu")
-local manager = require(".drawing.lib.event")
-local theme = require(".drawing.themes.light")
+local contentMenu = require(".gemstone.components.contextMenu")
+local manager = require(".gemstone.lib.event")
+local theme = require(".gemstone.themes.light")
 term.clear()
 local active
 

@@ -1,6 +1,6 @@
-local eventmgr = require(".drawing.lib.event")
-local dropdown = require(".drawing.components.dropdown")
-local theme = require(".drawing.themes.light")
+local eventmgr = require(".gemstone.lib.event")
+local dropdown = require(".gemstone.components.dropdown")
+local theme = require(".gemstone.themes.light")
 
 dropdown.add("dropdown", 2, 2, "Select", {
   "Option 1",

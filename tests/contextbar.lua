@@ -1,6 +1,6 @@
-local contextBar = require(".drawing.components.contextbar")
-local theme = require(".drawing.themes.light")
-local event = require(".drawing.lib.event")
+local contextBar = require(".gemstone.components.contextbar")
+local theme = require(".gemstone.themes.light")
+local event = require(".gemstone.lib.event")
 
 contextBar.create({
   {

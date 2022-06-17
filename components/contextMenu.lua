@@ -20,9 +20,13 @@ function contextMenu.render(id)
     maxWidth = math.max(maxWidth, #v.name)
   end
 
-  common.drawBorder(bgColor, m.backgroundColor, m.x, m.y, maxWidth + 2, #m.elements + 2, nil, true, true)
-  paintutils.drawFilledBox(m.x + 1, m.y + 1, m.x + maxWidth, m.y + #m.elements, m.backgroundColor)
-
+  if m.box then
+    paintutils.drawFilledBox(m.x, m.y, m.x + maxWidth + 1, m.y + #m.elements + 1, m.backgroundColor)
+  else
+    common.drawBorder(bgColor, m.backgroundColor, m.x, m.y, maxWidth + 2, #m.elements + 2, nil, true, true)
+    paintutils.drawFilledBox(m.x + 1, m.y + 1, m.x + maxWidth, m.y + #m.elements, m.backgroundColor)
+  end
+  
   for i, v in pairs(m.elements) do
     term.setCursorPos(m.x + 1, m.y + i)
     if v.name == "=sep" then
@@ -63,7 +67,8 @@ end
 -- @tparam table elements The elements that will be put inside the context menu. See tests/contextMenu.lua for an example.
 -- @tparam table theme The theme to use for the context menu.
 -- @tparam[opt] table presist If true, the context menu will stick around after being clicked or clicked outside of.
-function contextMenu.create(id, x, y, elements, theme, presist)
+-- @tparam[opt] boolean box Whether the borders should be boxes or not.
+function contextMenu.create(id, x, y, elements, theme, presist, box)
   menus[id] = {
     x = x,
     y = y,
@@ -73,7 +78,8 @@ function contextMenu.create(id, x, y, elements, theme, presist)
     disabledColor = theme.contextMenu.disabled,
     activeColor = theme.contextMenu.active,
     selectedColor = theme.contextMenu.selected,
-    selectedText = theme.contextMenu.selectedText
+    selectedText = theme.contextMenu.selectedText,
+    box = box
   }
   contextMenu.render(id)
 end
